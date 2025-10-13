@@ -24,7 +24,6 @@ namespace GoogleTextToSpeech.Scripts
             _errorReceived += ErrorReceived;
             _audioClipReceived += AudioClipReceived;
             text_to_speech.GetSpeechAudioFromGoogle(_text, voice, _audioClipReceived, _errorReceived);
-
         }
 
         private void ErrorReceived(BadRequestData badRequestData)

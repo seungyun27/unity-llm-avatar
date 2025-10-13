@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using CandyCoded.env;
 using UnityLLMAvatar;
 
 
@@ -28,7 +27,6 @@ namespace GoogleSpeechToText.Scripts
             }
 
             if (Input.GetKeyUp(KeyCode.Space) && recording)
-
             {
                 StopRecording();
                 recording = false;
