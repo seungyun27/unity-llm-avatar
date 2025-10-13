@@ -1,13 +1,14 @@
 using System;
 using GoogleTextToSpeech.Scripts.Data;
 using UnityEngine;
+using UnityLLMAvatar;
 using Input = GoogleTextToSpeech.Scripts.Data.Input;
 
 namespace GoogleTextToSpeech.Scripts
 {
     public class TextToSpeech : MonoBehaviour
     {
-        [SerializeField] private string apiKey;
+        private readonly string apiKey = EnvManager.GetApiKey("TTS_API_KEY");
 
         private Action<string> _actionRequestReceived;
         private Action<BadRequestData> _errorReceived;

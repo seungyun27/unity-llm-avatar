@@ -16,15 +16,15 @@ namespace GoogleTextToSpeech.Scripts
 
         private Action<AudioClip> _audioClipReceived;
         private Action<BadRequestData> _errorReceived;
-        [Header("TTS Àç»ý¿ë AudioSource")]
+        [Header("TTS AudioSource")]
         public AudioSource ttsSource;
-         
+
         public void SendTextToGoogle(string _text)
         {
             _errorReceived += ErrorReceived;
             _audioClipReceived += AudioClipReceived;
             text_to_speech.GetSpeechAudioFromGoogle(_text, voice, _audioClipReceived, _errorReceived);
-            
+
         }
 
         private void ErrorReceived(BadRequestData badRequestData)

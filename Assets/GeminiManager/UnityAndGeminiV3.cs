@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using GoogleTextToSpeech.Scripts.Data;
 using GoogleTextToSpeech.Scripts;
+using UnityLLMAvatar;
 
 
 [System.Serializable]
@@ -48,7 +49,7 @@ public class Part
 public class UnityAndGeminiV3: MonoBehaviour
 {
     [Header("Gemini API Password")]
-    public string apiKey;
+    private readonly string apiKey = EnvManager.GetApiKey("LANG_API_KEY");
     private string apiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent";
 
     [Header("NPC Function")]
@@ -57,6 +58,7 @@ public class UnityAndGeminiV3: MonoBehaviour
 
     void Start()
     {
+
         chatHistory = new Content[] { };
         googleServices.SendTextToGoogle("Wow, Nice to meet you! Hi there, how are you doing today? I hope you're having a great week so far. It's been a while, I hope everything is going well with you.");
     }

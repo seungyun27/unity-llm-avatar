@@ -2,71 +2,77 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using CandyCoded.env;
+using UnityLLMAvatar;
+
 
 namespace GoogleSpeechToText.Scripts
 {
     public class SpeechToTextManager : MonoBehaviour
     {
-        // [SerializeField] private string audioUri = "gs://cloud-samples-tests/speech/brooklyn.flac"; // Audio file URI in Google Cloud Storage
-        [Header("Google Cloud API Password")]
-        [SerializeField] private string apiKey; // Replace with your API key
+        private readonly string apiKey = EnvManager.GetApiKey("TTS_API_KEY");
+
         [Header("Gemini Manager Prefab")]
         public UnityAndGeminiV3 geminiManager;
-                
+
         private AudioClip clip;
         private byte[] bytes;
         private bool recording = false;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && !recording)
+        void Update()
         {
-            StartRecording();
-            recording = true;
-        } 
-        
-        if (Input.GetKeyUp(KeyCode.Space) && recording )
-        
-        {
-            StopRecording();
-            recording = false;
-        }
-
-    }
-
-    private void StartRecording()
-    {
-        clip = Microphone.Start(null, false, 10, 44100);
-        recording = true;
-    }
-
-    private byte[] EncodeAsWAV(float[] samples, int frequency, int channels) {
-        using (var memoryStream = new MemoryStream(44 + samples.Length * 2)) {
-            using (var writer = new BinaryWriter(memoryStream)) {
-                writer.Write("RIFF".ToCharArray());
-                writer.Write(36 + samples.Length * 2);
-                writer.Write("WAVE".ToCharArray());
-                writer.Write("fmt ".ToCharArray());
-                writer.Write(16);
-                writer.Write((ushort)1);
-                writer.Write((ushort)channels);
-                writer.Write(frequency);
-                writer.Write(frequency * channels * 2);
-                writer.Write((ushort)(channels * 2));
-                writer.Write((ushort)16);
-                writer.Write("data".ToCharArray());
-                writer.Write(samples.Length * 2);
-
-                foreach (var sample in samples) {
-                    writer.Write((short)(sample * short.MaxValue));
-                }
+            if (Input.GetKeyDown(KeyCode.Space) && !recording)
+            {
+                StartRecording();
+                recording = true;
             }
-            return memoryStream.ToArray();
-        }
-    }
 
-    private void StopRecording()
-    {
+            if (Input.GetKeyUp(KeyCode.Space) && recording)
+
+            {
+                StopRecording();
+                recording = false;
+            }
+
+        }
+
+        private void StartRecording()
+        {
+            clip = Microphone.Start(null, false, 10, 44100);
+            recording = true;
+        }
+
+        private byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
+        {
+            using (var memoryStream = new MemoryStream(44 + samples.Length * 2))
+            {
+                using (var writer = new BinaryWriter(memoryStream))
+                {
+                    writer.Write("RIFF".ToCharArray());
+                    writer.Write(36 + samples.Length * 2);
+                    writer.Write("WAVE".ToCharArray());
+                    writer.Write("fmt ".ToCharArray());
+                    writer.Write(16);
+                    writer.Write((ushort)1);
+                    writer.Write((ushort)channels);
+                    writer.Write(frequency);
+                    writer.Write(frequency * channels * 2);
+                    writer.Write((ushort)(channels * 2));
+                    writer.Write((ushort)16);
+                    writer.Write("data".ToCharArray());
+                    writer.Write(samples.Length * 2);
+
+                    foreach (var sample in samples)
+                    {
+                        writer.Write((short)(sample * short.MaxValue));
+                    }
+                }
+                return memoryStream.ToArray();
+            }
+        }
+
+        private void StopRecording()
+        {
             var position = Microphone.GetPosition(null);
             Microphone.End(null);
             var samples = new float[position * clip.channels];
@@ -75,7 +81,8 @@ namespace GoogleSpeechToText.Scripts
             recording = false;
 
             GoogleCloudSpeechToText.SendSpeechToTextRequest(bytes, apiKey,
-                (response) => {
+                (response) =>
+                {
                     Debug.Log("Speech-to-Text Response: " + response);
                     // Parse the response if needed
                     var speechResponse = JsonUtility.FromJson<SpeechToTextResponse>(response);
@@ -84,10 +91,11 @@ namespace GoogleSpeechToText.Scripts
                     geminiManager.SendChat(transcript);
 
                 },
-                (error) => {
+                (error) =>
+                {
                     Debug.LogError("Error: " + error.error.message);
                 });
-    }
+        }
 
     }
 }

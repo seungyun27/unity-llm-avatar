@@ -18,8 +18,6 @@ namespace GoogleSpeechToText.Scripts
         {
             string base64Content = Convert.ToBase64String(bytes);
 
-            
-
             var requestData = new SpeechToTextRequest
             {
                 config = new SpeechConfig
@@ -44,7 +42,7 @@ namespace GoogleSpeechToText.Scripts
             };
 
             // Format the endpoint with the provided API key
-            string url =  apiEndpoint + apiKey;
+            string url = apiEndpoint + apiKey;
 
             // Serialize request data to JSON
             string requestJson = JsonUtility.ToJson(requestData);
@@ -135,7 +133,7 @@ namespace GoogleSpeechToText.Scripts
     public class AudioData
     {
         // public string uri;
-        public string  content;
+        public string content;
     }
 
     // Response format for Google Speech-to-Text API

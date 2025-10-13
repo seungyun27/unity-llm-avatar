@@ -15,5 +15,5 @@ MonoBehaviour:
   Subdomain: tmddbs-lkg7e8
   AppId: 68c3c0d9694d2d0adf0e6c24
   EnableLogging: 0
-  EnableAnalytics: 1
+  EnableAnalytics: 0
   BodyType: 1
