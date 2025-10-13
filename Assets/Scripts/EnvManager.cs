@@ -1,5 +1,5 @@
+using System;
 using CandyCoded.env;
-using UnityEngine;
 
 namespace UnityLLMAvatar
 {
@@ -7,12 +7,10 @@ namespace UnityLLMAvatar
     {
         public static string GetApiKey(string keyName)
         {
-            env.TryParseEnvironmentVariable(keyName, out string key);
-            if (string.IsNullOrEmpty(key))
-            {
-                Debug.LogError($"API key '{keyName}' is not set. Please set the {keyName} in .env file.");
-            }
-            return key;
+            return env.TryParseEnvironmentVariable(keyName, out string key)
+                ? key
+                : throw new InvalidOperationException(
+                    $"API key '{keyName}' is not set. Please set the {keyName} in .env file.");
         }
     }
 }

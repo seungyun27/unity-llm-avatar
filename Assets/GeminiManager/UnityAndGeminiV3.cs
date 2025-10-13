@@ -49,11 +49,13 @@ public class Part
 public class UnityAndGeminiV3 : MonoBehaviour
 {
     private readonly string apiKey = EnvManager.GetApiKey("LANG_API_KEY");
-    private string apiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent";
+    private const string API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent";
 
     [Header("NPC Function")]
-    [SerializeField] private TextToSpeechManager googleServices;
+    [SerializeField] private TextToSpeechManager _textToSpeechManager;
     private Content[] chatHistory;
+
+    public ChatBot ChatBot;
 
     void Start()
     {
@@ -64,7 +66,7 @@ public class UnityAndGeminiV3 : MonoBehaviour
     // Functions for sending a new prompt, or a chat to Gemini
     private IEnumerator SendPromptRequestToGemini(string promptText)
     {
-        string url = $"{apiEndpoint}?key={apiKey}";
+        string url = $"{API_ENDPOINT}?key={apiKey}";
 
         string jsonData = "{\"contents\": [{\"parts\": [{\"text\": \"{" + promptText + "}\"}]}]}";
 
@@ -104,13 +106,13 @@ public class UnityAndGeminiV3 : MonoBehaviour
     public void SendChat(string userMessage)
     {
         // string userMessage = inputField.text;
-        StartCoroutine(SendChatRequestToGemini(userMessage));
+        // StartCoroutine(SendChatRequestToGemini(userMessage));
+        ChatBot.SubmitTranscript(userMessage);
     }
 
-    private IEnumerator SendChatRequestToGemini(string newMessage)
+    /*private IEnumerator SendChatRequestToGemini(string newMessage)
     {
-
-        string url = $"{apiEndpoint}?key={apiKey}";
+        string url = $"{API_ENDPOINT}?key={apiKey}";
 
         Content userContent = new Content
         {
@@ -177,17 +179,5 @@ public class UnityAndGeminiV3 : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void OnLLMWarmedUp(string firstResponse)
-    {
-        Debug.Log($"LLM Warmup response answer: {firstResponse}");
-        googleServices.SendTextToGoogle(firstResponse);
-    }
-
-    public void OnLLMUserRequest(string llmResponse)
-    {
-        Debug.Log($"LLM User request response answer: {llmResponse}");
-        googleServices.SendTextToGoogle(llmResponse);
-    }
+    }*/
 }

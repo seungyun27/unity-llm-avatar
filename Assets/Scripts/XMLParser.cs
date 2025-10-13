@@ -1,7 +1,6 @@
-using System.Diagnostics;
 using System.Xml;
 using Newtonsoft.Json;
-using UnityEngine;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace UnityLLMAvatar
 {
@@ -12,15 +11,17 @@ namespace UnityLLMAvatar
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlString);
 
-            if (xmlDoc == null)
+            if (xmlDoc.DocumentElement == null)
             {
-                return new();
+                return new LLMResponse();
             }
 
-            var response = new LLMResponse();
-            response.topic = GetInnerText(xmlDoc, "/response/topic");
-            response.analysis = GetInnerText(xmlDoc, "/response/analysis");
-            response.answer = GetInnerText(xmlDoc, "/response/answer");
+            var response = new LLMResponse
+            {
+                Topic = GetInnerText(xmlDoc, "/response/topic"),
+                Analysis = GetInnerText(xmlDoc, "/response/analysis"),
+                Answer = GetInnerText(xmlDoc, "/response/answer")
+            };
             return response;
         }
 
@@ -33,15 +34,15 @@ namespace UnityLLMAvatar
 
     public struct LLMResponse
     {
-        public string topic;
-        public string analysis;
-        public string answer; 
+        public string Topic;
+        public string Analysis;
+        public string Answer; 
 
         public override string ToString()
         {
             return JsonConvert.SerializeObject(
                 this,
-                Newtonsoft.Json.Formatting.Indented
+                Formatting.Indented
             );
         }
     }

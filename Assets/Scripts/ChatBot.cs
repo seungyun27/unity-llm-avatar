@@ -1,10 +1,8 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using LLMUnity;
+using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace UnityLLMAvatar
 {
@@ -22,17 +20,16 @@ namespace UnityLLMAvatar
         public float bubbleSpacing = 10f;
         public Sprite sprite;
         public Button stopButton;
+        public AIManager AIManager;
 
         private InputBubble inputBubble;
-        private List<Bubble> chatBubbles = new List<Bubble>();
+        private readonly List<Bubble> chatBubbles = new();
         private bool blockInput = true;
         private BubbleUI playerUI, aiUI;
         private bool warmUpDone = false;
         private int lastBubbleOutsideFOV = -1;
 
-        [SerializeField] private UnityAndGeminiV3 _geminiManager;
-
-        void Start()
+        private void Start()
         {
             if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             playerUI = new BubbleUI
@@ -54,7 +51,7 @@ namespace UnityLLMAvatar
             aiUI.leftPosition = 1;
 
             inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Loading...", 4);
-            inputBubble.AddSubmitListener(onInputFieldSubmit);
+            inputBubble.AddSubmitListener(OnInputFieldSubmit);
             inputBubble.AddValueChangedListener(onValueChanged);
             inputBubble.setInteractable(false);
             stopButton.gameObject.SetActive(true);
@@ -74,7 +71,7 @@ namespace UnityLLMAvatar
             _ = llmCharacter.Warmup(WarmUpCallback);
         }
 
-        Bubble AddBubble(string message, bool isPlayerMessage)
+        private Bubble AddBubble(string message, bool isPlayerMessage)
         {
             Bubble bubble = new Bubble(chatContainer, isPlayerMessage? playerUI: aiUI, isPlayerMessage? "PlayerBubble": "AIBubble", message);
             chatBubbles.Add(bubble);
@@ -82,56 +79,106 @@ namespace UnityLLMAvatar
             return bubble;
         }
 
-        void ShowLoadedMessages()
+        private void ShowLoadedMessages()
         {
             for (int i=1; i<llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].content, i%2==1);
         }
 
-        async void onInputFieldSubmit(string newText)
+        public async void SubmitTranscript(string transcript)
         {
-            inputBubble.ActivateInputField();
-            if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            try
             {
-                StartCoroutine(BlockInteraction());
-                return;
+                inputBubble.ActivateInputField();
+                if (blockInput || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                {
+                    StartCoroutine(BlockInteraction());
+                    return;
+                }
+                blockInput = true;
+                
+                string message = transcript.Replace("\v", "\n");
+
+                AddBubble(message, true);
+                Bubble aiBubble = AddBubble("···", false);
+
+                message = $"<request>{message}</request>";
+                string llmResponse = await llmCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
+
+                var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
+                Debug.Log(parsedResponse);
+                aiBubble.SetText(parsedResponse.Answer);
+                AIManager.TextToSpeechManager.SendTextToGoogle(parsedResponse.Answer);
+
+                inputBubble.SetText("");
             }
-            blockInput = true;
-            // replace vertical_tab
-            string message = inputBubble.GetText().Replace("\v", "\n");
-
-            AddBubble(message, true);
-            Bubble aiBubble = AddBubble("...", false);
-
-            message = $"<request>{message}</request>";
-            string llmResponse = await llmCharacter.Chat(message, aiBubble.SetText, AllowInput);
-
-            var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
-            _geminiManager.OnLLMUserRequest(parsedResponse.answer);
-
-            inputBubble.SetText("");
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
 
-        public async void WarmUpCallback()
+        private async void OnInputFieldSubmit(string newText)
         {
-            warmUpDone = true;
+            try
+            {
+                inputBubble.ActivateInputField();
+                if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                {
+                    StartCoroutine(BlockInteraction());
+                    return;
+                }
+                blockInput = true;
+                // replace vertical_tab
+                string message = inputBubble.GetText().Replace("\v", "\n");
 
-            // After warmup, greet the user first
-            var message = "Hello!";
-            AddBubble(message, true);
-            Bubble aiBubble = AddBubble("...", false);
+                AddBubble(message, true);
+                Bubble aiBubble = AddBubble("···", false);
 
-            message = $"<request>{message}</request>";
-            var firstResponse = await llmCharacter.Chat(message, aiBubble.SetText, AllowInput);
+                message = $"<request>{message}</request>";
+                string llmResponse = await llmCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
 
-            var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
+                var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
+                Debug.Log(parsedResponse);
+                aiBubble.SetText(parsedResponse.Answer);
+                AIManager.TextToSpeechManager.SendTextToGoogle(parsedResponse.Answer);
 
-            _geminiManager.OnLLMWarmedUp(parsedResponse.answer);
-
-            inputBubble.SetPlaceHolderText("Message me");
-            AllowInput();
+                inputBubble.SetText("");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
 
-        public void AllowInput()
+        private async void WarmUpCallback()
+        {
+            try
+            {
+                warmUpDone = true;
+
+                // After warmup, greet the user first
+                var message = "Hello!";
+                // AddBubble(message, true);
+                Bubble aiBubble = AddBubble("⋯", false);
+
+                message = $"<request>{message}</request>";
+                string firstResponse = await llmCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
+
+                var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
+                Debug.Log(parsedResponse);
+                aiBubble.SetText(parsedResponse.Answer);
+                AIManager.TextToSpeechManager.SendTextToGoogle(parsedResponse.Answer);
+
+                inputBubble.SetPlaceHolderText("Message me");
+                AllowInput();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        private void AllowInput()
         {
             blockInput = false;
             inputBubble.ReActivateInputField();
@@ -143,7 +190,7 @@ namespace UnityLLMAvatar
             AllowInput();
         }
 
-        IEnumerator<string> BlockInteraction()
+        private IEnumerator<string> BlockInteraction()
         {
             // prevent from change until next frame
             inputBubble.setInteractable(false);
@@ -153,7 +200,7 @@ namespace UnityLLMAvatar
             inputBubble.MoveTextEnd();
         }
 
-        void onValueChanged(string newText)
+        private void onValueChanged(string newText)
         {
             // Get rid of newline character added when we press enter
             if (Input.GetKey(KeyCode.Return))
@@ -163,7 +210,7 @@ namespace UnityLLMAvatar
             }
         }
 
-        public void UpdateBubblePositions()
+        private void UpdateBubblePositions()
         {
             float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
             float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
@@ -182,7 +229,7 @@ namespace UnityLLMAvatar
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (!inputBubble.inputFocused() && warmUpDone)
             {
@@ -207,8 +254,9 @@ namespace UnityLLMAvatar
             Application.Quit();
         }
 
-        bool onValidateWarning = true;
-        void OnValidate()
+        private bool onValidateWarning = true;
+
+        private void OnValidate()
         {
             if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
             {

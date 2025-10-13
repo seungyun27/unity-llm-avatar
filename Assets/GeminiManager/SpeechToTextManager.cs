@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 using UnityLLMAvatar;
-
 
 namespace GoogleSpeechToText.Scripts
 {
@@ -11,14 +8,13 @@ namespace GoogleSpeechToText.Scripts
     {
         private readonly string apiKey = EnvManager.GetApiKey("TTS_API_KEY");
 
-        [Header("Gemini Manager Prefab")]
-        public UnityAndGeminiV3 geminiManager;
-
+        public AIManager AIManager;
+        
         private AudioClip clip;
         private byte[] bytes;
         private bool recording = false;
 
-        void Update()
+        /*void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space) && !recording)
             {
@@ -31,13 +27,41 @@ namespace GoogleSpeechToText.Scripts
                 StopRecording();
                 recording = false;
             }
+        }*/
 
-        }
-
-        private void StartRecording()
+        public void StartRecording()
         {
+            if (recording) return;
+            
             clip = Microphone.Start(null, false, 10, 44100);
             recording = true;
+            
+            Debug.Log("Recording started...");
+        }
+        
+        public void StopRecording()
+        {
+            if (!recording) return;
+            
+            var position = Microphone.GetPosition(null);
+            Microphone.End(null);
+            var samples = new float[position * clip.channels];
+            clip.GetData(samples, 0);
+            bytes = EncodeAsWAV(samples, clip.frequency, clip.channels);
+            recording = false;
+            Debug.Log("Recording stopped.");
+            
+            GoogleCloudSpeechToText.SendSpeechToTextRequest(bytes, apiKey,
+                (response) =>
+                {
+                    Debug.Log("Speech-to-Text Response: " + response);
+                    // Parse the response if needed
+                    var speechResponse = JsonUtility.FromJson<SpeechToTextResponse>(response);
+                    var transcript = speechResponse.results[0].alternatives[0].transcript;
+                    Debug.Log("Transcript: " + transcript);
+                    AIManager.ChatBot.SubmitTranscript(transcript);
+                },
+                (error) => Debug.LogError("Error: " + error.error.message));
         }
 
         private byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
@@ -65,35 +89,9 @@ namespace GoogleSpeechToText.Scripts
                         writer.Write((short)(sample * short.MaxValue));
                     }
                 }
+
                 return memoryStream.ToArray();
             }
         }
-
-        private void StopRecording()
-        {
-            var position = Microphone.GetPosition(null);
-            Microphone.End(null);
-            var samples = new float[position * clip.channels];
-            clip.GetData(samples, 0);
-            bytes = EncodeAsWAV(samples, clip.frequency, clip.channels);
-            recording = false;
-
-            GoogleCloudSpeechToText.SendSpeechToTextRequest(bytes, apiKey,
-                (response) =>
-                {
-                    Debug.Log("Speech-to-Text Response: " + response);
-                    // Parse the response if needed
-                    var speechResponse = JsonUtility.FromJson<SpeechToTextResponse>(response);
-                    var transcript = speechResponse.results[0].alternatives[0].transcript;
-                    Debug.Log("Transcript: " + transcript);
-                    geminiManager.SendChat(transcript);
-
-                },
-                (error) =>
-                {
-                    Debug.LogError("Error: " + error.error.message);
-                });
-        }
-
     }
 }

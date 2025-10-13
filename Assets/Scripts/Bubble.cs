@@ -159,6 +159,19 @@ namespace UnityLLMAvatar
             bubbleObject.GetComponent<Text>().text = text;
         }
 
+        public void SetThinkingText(string _)
+        {
+            var textObject = bubbleObject.GetComponent<Text>();
+            if (textObject.text.Length < 6)
+            {
+                textObject.text += "·";
+            }
+            else
+            {
+                textObject.text = "···";
+            }
+        }
+
         public void Destroy()
         {
             UnityEngine.Object.Destroy(bubbleObject);
