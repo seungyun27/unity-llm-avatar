@@ -1,21 +1,18 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System;
-using GoogleTextToSpeech.Scripts.Data;
 using GoogleTextToSpeech.Scripts;
 using UnityLLMAvatar;
 
 
-[System.Serializable]
+[Serializable]
 public class UnityAndGeminiKey
 {
     public string key;
 }
 
-[System.Serializable]
+[Serializable]
 public class Response
 {
     public Candidate[] candidates;
@@ -26,20 +23,20 @@ public class ChatRequest
     public Content[] contents;
 }
 
-[System.Serializable]
+[Serializable]
 public class Candidate
 {
     public Content content;
 }
 
-[System.Serializable]
+[Serializable]
 public class Content
 {
     public string role; 
     public Part[] parts;
 }
 
-[System.Serializable]
+[Serializable]
 public class Part
 {
     public string text;
@@ -53,15 +50,9 @@ public class UnityAndGeminiV3 : MonoBehaviour
 
     [Header("NPC Function")]
     [SerializeField] private TextToSpeechManager _textToSpeechManager;
-    private Content[] chatHistory;
+    private Content[] chatHistory = Array.Empty<Content>();
 
     public ChatBot ChatBot;
-
-    void Start()
-    {
-        chatHistory = new Content[] { };
-        // googleServices.SendTextToGoogle("Wow, Nice to meet you! Hi there, how are you doing today? I hope you're having a great week so far. It's been a while, I hope everything is going well with you.");
-    }
 
     // Functions for sending a new prompt, or a chat to Gemini
     private IEnumerator SendPromptRequestToGemini(string promptText)
@@ -107,7 +98,6 @@ public class UnityAndGeminiV3 : MonoBehaviour
     {
         // string userMessage = inputField.text;
         // StartCoroutine(SendChatRequestToGemini(userMessage));
-        ChatBot.SubmitTranscript(userMessage);
     }
 
     /*private IEnumerator SendChatRequestToGemini(string newMessage)

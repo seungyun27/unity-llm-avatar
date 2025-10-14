@@ -1,17 +1,18 @@
 using System;
+using GoogleTextToSpeech.Scripts.Data;
 
-namespace GoogleTextToSpeech.Scripts.Data
+namespace UnityLLMAvatar.GoogleApi
 {
     [Serializable]
-    public class DataToSend
+    public class TTSPayload
     {
         public Input input;
         public Voice voice;
         public AudioConfig audioConfig;
 
-        public static DataToSend MakeInstance(string text, VoiceScriptableObject voice)
+        public static TTSPayload MakeInstance(string text, VoiceScriptableObject voice)
         {
-            return new DataToSend
+            return new TTSPayload
             {
                 input =
                     new Input()

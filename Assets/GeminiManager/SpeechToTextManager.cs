@@ -12,43 +12,28 @@ namespace GoogleSpeechToText.Scripts
         
         private AudioClip clip;
         private byte[] bytes;
-        private bool recording = false;
-
-        /*void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space) && !recording)
-            {
-                StartRecording();
-                recording = true;
-            }
-
-            if (Input.GetKeyUp(KeyCode.Space) && recording)
-            {
-                StopRecording();
-                recording = false;
-            }
-        }*/
+        private bool _isRecording = false;
 
         public void StartRecording()
         {
-            if (recording) return;
+            if (_isRecording) return;
             
             clip = Microphone.Start(null, false, 10, 44100);
-            recording = true;
+            _isRecording = true;
             
             Debug.Log("Recording started...");
         }
         
         public void StopRecording()
         {
-            if (!recording) return;
+            if (!_isRecording) return;
             
             var position = Microphone.GetPosition(null);
             Microphone.End(null);
             var samples = new float[position * clip.channels];
             clip.GetData(samples, 0);
             bytes = EncodeAsWAV(samples, clip.frequency, clip.channels);
-            recording = false;
+            _isRecording = false;
             Debug.Log("Recording stopped.");
             
             GoogleCloudSpeechToText.SendSpeechToTextRequest(bytes, apiKey,
@@ -59,7 +44,7 @@ namespace GoogleSpeechToText.Scripts
                     var speechResponse = JsonUtility.FromJson<SpeechToTextResponse>(response);
                     var transcript = speechResponse.results[0].alternatives[0].transcript;
                     Debug.Log("Transcript: " + transcript);
-                    AIManager.ChatBot.SubmitTranscript(transcript);
+                    AIManager.SubmitTranscript(transcript);
                 },
                 (error) => Debug.LogError("Error: " + error.error.message));
         }

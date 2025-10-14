@@ -9,7 +9,7 @@ namespace GoogleTextToSpeech.Scripts
 {
     public class AudioConverter : MonoBehaviour
     {
-        private const string Mp3FileName = "audio.mp3";
+        private static string Mp3FileName => "avatar-audio-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".mp3";
 
         public static void SaveTextToMp3(AudioData audioData)
         {
@@ -17,12 +17,7 @@ namespace GoogleTextToSpeech.Scripts
             File.WriteAllBytes(Application.temporaryCachePath + "/" + Mp3FileName, bytes);
         }
 
-        public void LoadClipFromMp3(Action<AudioClip> onClipLoaded)
-        {
-            StartCoroutine(LoadClipFromMp3Cor(onClipLoaded));
-        }
-
-        private static IEnumerator LoadClipFromMp3Cor(Action<AudioClip> onClipLoaded)
+        public static IEnumerator LoadClipFromMp3Cor(Action<AudioClip> onClipLoaded)
         {
             var downloadHandler =
                 new DownloadHandlerAudioClip("file://" + Application.temporaryCachePath + "/" + Mp3FileName,

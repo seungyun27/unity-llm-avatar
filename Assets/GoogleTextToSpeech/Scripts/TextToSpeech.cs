@@ -8,7 +8,7 @@ namespace GoogleTextToSpeech.Scripts
 {
     public class TextToSpeech : MonoBehaviour
     {
-        private readonly string apiKey = EnvManager.GetApiKey("TTS_API_KEY");
+        /* private readonly string apiKey = EnvManager.GetApiKey("TTS_API_KEY");
 
         private Action<string> _actionRequestReceived;
         private Action<BadRequestData> _errorReceived;
@@ -58,6 +58,6 @@ namespace GoogleTextToSpeech.Scripts
             var audioData = JsonUtility.FromJson<AudioData>(requestData);
             AudioConverter.SaveTextToMp3(audioData);
             _audioConverter.LoadClipFromMp3(audioClipReceived);
-        }
+        } */
     }
 }

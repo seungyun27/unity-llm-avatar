@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LLMUnity;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +22,8 @@ namespace UnityLLMAvatar
         public Sprite sprite;
         public Button stopButton;
         public AIManager AIManager;
+
+        public Action<string> OnChatBotResponse;
 
         private InputBubble inputBubble;
         private readonly List<Bubble> chatBubbles = new();
@@ -73,7 +76,7 @@ namespace UnityLLMAvatar
 
         private Bubble AddBubble(string message, bool isPlayerMessage)
         {
-            Bubble bubble = new Bubble(chatContainer, isPlayerMessage? playerUI: aiUI, isPlayerMessage? "PlayerBubble": "AIBubble", message);
+            Bubble bubble = new Bubble(chatContainer, isPlayerMessage ? playerUI : aiUI, isPlayerMessage ? "PlayerBubble" : "AIBubble", message);
             chatBubbles.Add(bubble);
             bubble.OnResize(UpdateBubblePositions);
             return bubble;
@@ -81,40 +84,33 @@ namespace UnityLLMAvatar
 
         private void ShowLoadedMessages()
         {
-            for (int i=1; i<llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].content, i%2==1);
+            for (int i = 1; i < llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].content, i % 2 == 1);
         }
 
-        public async void SubmitTranscript(string transcript)
+        public async Task<string> SubmitTranscript(string transcript)
         {
-            try
+            inputBubble.ActivateInputField();
+            if (blockInput || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                inputBubble.ActivateInputField();
-                if (blockInput || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                {
-                    StartCoroutine(BlockInteraction());
-                    return;
-                }
-                blockInput = true;
-                
-                string message = transcript.Replace("\v", "\n");
-
-                AddBubble(message, true);
-                Bubble aiBubble = AddBubble("···", false);
-
-                message = $"<request>{message}</request>";
-                string llmResponse = await llmCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
-
-                var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
-                Debug.Log(parsedResponse);
-                aiBubble.SetText(parsedResponse.Answer);
-                AIManager.TextToSpeechManager.SendTextToGoogle(parsedResponse.Answer);
-
-                inputBubble.SetText("");
+                StartCoroutine(BlockInteraction());
+                return "";
             }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
+            blockInput = true;
+
+            string message = transcript.Replace("\v", "\n");
+
+            AddBubble(message, true);
+            Bubble aiBubble = AddBubble("···", false);
+
+            message = $"<request>{message}</request>";
+            string llmResponse = await llmCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
+
+            var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
+            Debug.Log(parsedResponse);
+            aiBubble.SetText(parsedResponse.Answer);
+
+            inputBubble.SetText("");
+            return parsedResponse.Answer;
         }
 
         private async void OnInputFieldSubmit(string newText)
@@ -140,9 +136,10 @@ namespace UnityLLMAvatar
                 var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
                 Debug.Log(parsedResponse);
                 aiBubble.SetText(parsedResponse.Answer);
-                AIManager.TextToSpeechManager.SendTextToGoogle(parsedResponse.Answer);
 
                 inputBubble.SetText("");
+
+                OnChatBotResponse?.Invoke(parsedResponse.Answer);
             }
             catch (Exception e)
             {
@@ -167,7 +164,8 @@ namespace UnityLLMAvatar
                 var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
                 Debug.Log(parsedResponse);
                 aiBubble.SetText(parsedResponse.Answer);
-                AIManager.TextToSpeechManager.SendTextToGoogle(parsedResponse.Answer);
+
+                OnChatBotResponse?.Invoke(parsedResponse.Answer);
 
                 inputBubble.SetPlaceHolderText("Message me");
                 AllowInput();

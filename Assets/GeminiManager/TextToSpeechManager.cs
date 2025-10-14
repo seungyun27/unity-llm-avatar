@@ -1,41 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using GoogleTextToSpeech.Scripts.Data;
-using TMPro;
-using System;
-using ReadyPlayerAvatar = ReadyPlayerMe.Core;
+using UnityLLMAvatar;
 
 namespace GoogleTextToSpeech.Scripts
 {
     public class TextToSpeechManager : MonoBehaviour
     {
-        [SerializeField] private VoiceScriptableObject voice;
-        [SerializeField] private TextToSpeech text_to_speech;
-        // [SerializeField] private AudioSource audioSource;
+        [Header("Voice Settings")]
+        public VoiceScriptableObject Voice;
 
-        private Action<AudioClip> _audioClipReceived;
-        private Action<BadRequestData> _errorReceived;
         [Header("TTS AudioSource")]
-        public AudioSource ttsSource;
+        public AudioSource TTSAudioSource;
 
-        public void SendTextToGoogle(string _text)
+        public void OnRequestReceived(string requestData)
         {
-            _errorReceived += ErrorReceived;
-            _audioClipReceived += AudioClipReceived;
-            text_to_speech.GetSpeechAudioFromGoogle(_text, voice, _audioClipReceived, _errorReceived);
+            AudioConverter.SaveTextToMp3(JsonUtility.FromJson<AudioData>(requestData));
+            StartCoroutine(AudioConverter.LoadClipFromMp3Cor(OnClipLoaded));
         }
 
-        private void ErrorReceived(BadRequestData badRequestData)
+        public void OnClipLoaded(AudioClip clip)
         {
-            Debug.Log($"Error {badRequestData.error.code} : {badRequestData.error.message}");
+            TTSAudioSource.Stop();
+            TTSAudioSource.clip = clip;
+            TTSAudioSource.Play();
         }
 
-        private void AudioClipReceived(AudioClip clip)
+        public void SendTextToGoogle(string text)
         {
-            ttsSource.Stop();
-            ttsSource.clip = clip;
-            ttsSource.Play();
+            RequestService.SendDataToGoogle(
+                url:        "https://texttospeech.googleapis.com/v1/text:synthesize",
+                apiKey:     EnvManager.GetApiKey("TTS_API_KEY"),
+                payload:    DataToSend.MakeInstance(text, Voice),
+                onSuccess:  requestData => OnRequestReceived(requestData),
+                onError:    badRequestData => Debug.LogError($"Error {badRequestData.error.code} : {badRequestData.error.message}")
+            );
         }
     }
 }
