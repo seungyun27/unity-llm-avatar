@@ -4,15 +4,35 @@ using GoogleTextToSpeech.Scripts.Data;
 namespace UnityLLMAvatar.GoogleApi
 {
     [Serializable]
-    public class TTSPayload
+    public class TextToSpeechRequest
     {
+        [Serializable]
+        public class Input
+        {
+            public string text;
+        }
+
+        [Serializable]
+        public class Voice
+        {
+            public string languageCode;
+            public string name;
+        }
+
+        [Serializable]
+        public class AudioConfig
+        {
+            public string audioEncoding;
+            public float pitch;
+            public float speakingRate;
+        }
         public Input input;
         public Voice voice;
         public AudioConfig audioConfig;
 
-        public static TTSPayload MakeInstance(string text, VoiceScriptableObject voice)
+        public static TextToSpeechRequest MakeInstance(string text, VoiceScriptableObject voice)
         {
-            return new TTSPayload
+            return new TextToSpeechRequest
             {
                 input =
                     new Input()
@@ -35,25 +55,11 @@ namespace UnityLLMAvatar.GoogleApi
             };
         }
     }
-
+    
     [Serializable]
-    public class Input
+    public class TextToSpeechResponse
     {
-        public string text;
-    }
+        public string audioContent;
 
-    [Serializable]
-    public class Voice
-    {
-        public string languageCode;
-        public string name;
-    }
-
-    [Serializable]
-    public class AudioConfig
-    {
-        public string audioEncoding;
-        public float pitch;
-        public float speakingRate;
     }
 }

@@ -9,7 +9,7 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-namespace UnityLLMAvatar
+namespace UnityLLMAvatar.LLM
 {
     public static class XMLGrammar
     {

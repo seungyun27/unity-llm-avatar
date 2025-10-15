@@ -1,4 +1,4 @@
-﻿namespace UnityLLMAvatar
+﻿namespace UnityLLMAvatar.LLM
 {
     public static class SystemPrompts
     {

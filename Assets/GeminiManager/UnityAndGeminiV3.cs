@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using GoogleTextToSpeech.Scripts;
+using LLMUnitySamples;
 using UnityLLMAvatar;
+using UnityLLMAvatar.util;
 
 
 [Serializable]

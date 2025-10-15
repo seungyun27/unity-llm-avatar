@@ -2,7 +2,7 @@ using System;
 
 namespace GoogleTextToSpeech.Scripts.Data
 {
-    [Serializable]
+    /*[Serializable]
     public class DataToSend
     {
         public Input input;
@@ -54,5 +54,5 @@ namespace GoogleTextToSpeech.Scripts.Data
         public string audioEncoding;
         public float pitch;
         public float speakingRate;
-    }
+    }*/
 }

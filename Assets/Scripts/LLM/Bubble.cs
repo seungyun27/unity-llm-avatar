@@ -4,7 +4,7 @@ using System;
 using LLMUnity;
 using Unity.VisualScripting;
 
-namespace UnityLLMAvatar
+namespace UnityLLMAvatar.LLM
 {
     struct BubbleUI
     {

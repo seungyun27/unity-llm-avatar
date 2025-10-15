@@ -1,7 +1,7 @@
 using System;
 using CandyCoded.env;
 
-namespace UnityLLMAvatar
+namespace UnityLLMAvatar.util
 {
     public static class EnvManager
     {

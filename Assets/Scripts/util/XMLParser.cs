@@ -2,7 +2,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 
-namespace UnityLLMAvatar
+namespace UnityLLMAvatar.util
 {
     public static class XMLParser
     {
@@ -32,7 +32,7 @@ namespace UnityLLMAvatar
         }
     }
 
-    public struct LLMResponse
+    public class LLMResponse
     {
         public string Topic;
         public string Analysis;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GoogleTextToSpeech.Scripts.Data
+namespace UnityLLMAvatar.GoogleApi
 {
     [CreateAssetMenu(fileName = "Voice", menuName = "GoogleTextToSpeech/Voice", order = 1)]
     public class VoiceScriptableObject : ScriptableObject
