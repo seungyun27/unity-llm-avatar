@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 26
-  productGUID: ccb1d8c9c50fe7242a3b6e14ded78b14
+  productGUID: 065639a752e0ff84a939fafd1f6d35e7
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: avatar3
+  productName: Avatar
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -791,14 +791,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: avatar3
+  metroPackageName: Avatar
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: avatar3
+  metroApplicationDescription: Avatar
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -868,11 +868,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 71709863-a387-4adf-9cb3-5354fcf6afd2
+  cloudProjectId: 4c4296d4-b1e6-4c3b-b594-122b417f920f
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: avatar3
-  organizationId: ksy062700
+  projectName: Avatar 2025-10-27_18-41-57
+  organizationId: ksy062738
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

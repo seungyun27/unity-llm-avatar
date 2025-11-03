@@ -8,7 +8,7 @@ namespace GoogleTextToSpeech.Scripts.Data
         public string languageCode;
         public new string name;
         [Range(0.25f, 4f)]
-        public float speed = 0.9f;
+        public float speed = 1;
         [Range(-20f, 20f)]
         public float pitch;
     }

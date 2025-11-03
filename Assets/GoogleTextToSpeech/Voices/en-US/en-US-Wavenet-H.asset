@@ -14,5 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   languageCode: en-US
   name: en-US-Wavenet-H
-  speed: 0.7
-  pitch: 5.2
