@@ -8,13 +8,7 @@ namespace UnityLLMAvatar
 {
     public class AIManager : MonoBehaviour
     {
-        [Header("LLM Unity")]
-        [SerializeField]
-        private LLMUnity.LLM _llm;
-
-        [SerializeField]
-        private LLMCharacter _llmCharacter;
-
+        [Header("LLM ChatBot")]
         [SerializeField]
         private ChatBot _chatBot;
 
@@ -33,6 +27,24 @@ namespace UnityLLMAvatar
         private void OnDisable()
         {
             _chatBot.OnResponseReceived -= OnChatBotResponse;
+        }
+
+        private void OnValidate()
+        {
+            if (_chatBot == null)
+            {
+                Debug.LogWarning("ChatBot is not assigned in AIManager!");
+            }
+
+            if (_textToSpeechManager == null)
+            {
+                Debug.LogWarning("TextToSpeechManager is not assigned in AIManager!");
+            }
+
+            if (_speechToTextManager == null)
+            {
+                Debug.LogWarning("SpeechToTextManager is not assigned in AIManager!");
+            }
         }
 
         public async void ProcessSpeech(byte[] rawAudio)

@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityLLMAvatar.util;
 
 namespace UnityLLMAvatar.GoogleApi
 {
     [CreateAssetMenu(fileName = "Voice", menuName = "GoogleTextToSpeech/Voice", order = 1)]
-    public class VoiceScriptableObject : ScriptableObject
+    public class VoiceScriptableObject : RuntimeScriptableObject
     {
         public string languageCode;
         public new string name;
@@ -11,5 +12,11 @@ namespace UnityLLMAvatar.GoogleApi
         public float speed = 0.9f;
         [Range(-20f, 20f)]
         public float pitch;
+
+        protected override void OnReset()
+        {
+            speed = 1f;
+            pitch = 0f;
+        }
     }
 }

@@ -11,14 +11,14 @@ namespace UnityLLMAvatar.LLM
     public class ChatBot : MonoBehaviour
     {
         #region Public Fields
-        public Transform chatContainer;
+        public LLMCharacter llmCharacter;
+        public RectTransform chatContainer;
         public Color playerColor = new Color32(81, 164, 81, 255);
         public Color aiColor = new Color32(29, 29, 73, 255);
         public Color fontColor = Color.white;
         public Font font;
         public int fontSize = 16;
         public int bubbleWidth = 600;
-        public LLMCharacter llmCharacter;
         public float textPadding = 10f;
         public float bubbleSpacing = 10f;
         public Sprite sprite;
@@ -78,6 +78,26 @@ namespace UnityLLMAvatar.LLM
 
         private void OnValidate()
         {
+            if (llmCharacter == null)
+            {
+                Debug.LogWarning("LLM Character is not assigned in ChatBot!");
+            }
+            
+            if (chatContainer == null)
+            {
+                Debug.LogWarning("Chat Container is not assigned in ChatBot!");
+            }
+
+            if (sprite == null)
+            {
+                Debug.LogWarning("Bubble Sprite is not assigned in ChatBot!");
+            }
+
+            if (stopButton == null)
+            {
+                Debug.LogWarning("Stop Button is not assigned in ChatBot!");
+            }
+            
             if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
             {
                 Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
@@ -261,7 +281,8 @@ namespace UnityLLMAvatar.LLM
         private void UpdateBubblePositions()
         {
             float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
-            float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
+            // float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
+            float containerHeight = chatContainer.rect.height;
             for (int i = chatBubbles.Count - 1; i >= 0; i--)
             {
                 Bubble bubble = chatBubbles[i];

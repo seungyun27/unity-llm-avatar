@@ -26,6 +26,24 @@ namespace UnityLLMAvatar
             RecordStopButton.onClick.RemoveListener(StopRecording);
         }
 
+        private void OnValidate()
+        {
+            if (AIManager == null)
+            {
+                Debug.LogWarning("AIManager is not assigned in SpeechToTextManager!");
+            }
+
+            if (RecordButton == null)
+            {
+                Debug.LogWarning("RecordButton is not assigned in SpeechToTextManager!");
+            }
+
+            if (RecordStopButton == null)
+            {
+                Debug.LogWarning("RecordStopButton is not assigned in SpeechToTextManager!");
+            }
+        }
+
         public void ChangeRecordButtonState()
         {
             RecordButton.interactable = true;
