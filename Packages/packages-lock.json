@@ -171,6 +171,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "xyz.candycoded.env": {
+      "version": "file:../ThirdParty/xyz.candycoded.env-1.1.5.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

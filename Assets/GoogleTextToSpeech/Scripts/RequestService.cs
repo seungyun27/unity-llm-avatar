@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,20 +8,22 @@ using UnityEngine.Networking;
 
 namespace GoogleTextToSpeech.Scripts
 {
-    public class RequestService : MonoBehaviour
+    public static class RequestService
     {
-        public static void SendDataToGoogle(string url, DataToSend dataToSend, string apiKey, Action<string> requestReceived,
-            Action<BadRequestData> errorReceived)
+        public static void SendDataToGoogle(string url, string apiKey, DataToSend payload, Action<string> onSuccess,
+            Action<BadRequestData> onError)
         {
-            var headers = new Dictionary<string, string>();
-            headers.Add("X-Goog-Api-Key", apiKey);
-            headers.Add("Content-Type", "application/json; charset=utf-8");
+            var headers = new Dictionary<string, string>
+            {
+                { "X-Goog-Api-Key", apiKey },
+                { "Content-Type", "application/json; charset=utf-8" }
+            };
             
-            Post(url, JsonUtility.ToJson(dataToSend), requestReceived,  errorReceived, headers);
+            Post(url, JsonUtility.ToJson(payload), onSuccess,  onError, headers);
         }
-        
-        private static async void Post(string url, string bodyJsonString, Action<string> requestReceived,
-            Action<BadRequestData> errorReceived, Dictionary<string, string> headers = null)
+
+        private static async void Post(string url, string bodyJsonString, Action<string> onSuccess,
+            Action<BadRequestData> onError, Dictionary<string, string> headers = null)
         {
             var request = new UnityWebRequest(url, "POST");
             var bodyRaw = Encoding.UTF8.GetBytes(bodyJsonString);
@@ -44,11 +46,11 @@ namespace GoogleTextToSpeech.Scripts
 
             if (HasError(request, out var badRequest))
             {
-                errorReceived?.Invoke(badRequest);
+                onError?.Invoke(badRequest);
             }
             else
             {
-                requestReceived?.Invoke(request.downloadHandler.text);
+                onSuccess?.Invoke(request.downloadHandler.text);
             }
             
             request.Dispose();
@@ -84,4 +86,4 @@ namespace GoogleTextToSpeech.Scripts
             }
         }
     }
-}
+}*/

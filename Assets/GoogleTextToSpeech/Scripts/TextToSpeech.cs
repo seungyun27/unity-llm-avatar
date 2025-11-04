@@ -1,13 +1,14 @@
-using System;
+/*using System;
 using GoogleTextToSpeech.Scripts.Data;
 using UnityEngine;
+using UnityLLMAvatar.util;
 using Input = GoogleTextToSpeech.Scripts.Data.Input;
 
 namespace GoogleTextToSpeech.Scripts
 {
     public class TextToSpeech : MonoBehaviour
     {
-        [SerializeField] private string apiKey;
+        /* private readonly string apiKey = EnvManager.GetApiKey("TTS_API_KEY");
 
         private Action<string> _actionRequestReceived;
         private Action<BadRequestData> _errorReceived;
@@ -57,6 +58,6 @@ namespace GoogleTextToSpeech.Scripts
             var audioData = JsonUtility.FromJson<AudioData>(requestData);
             AudioConverter.SaveTextToMp3(audioData);
             _audioConverter.LoadClipFromMp3(audioClipReceived);
-        }
+        } #1#
     }
-}
+}*/

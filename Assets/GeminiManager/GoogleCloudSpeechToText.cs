@@ -10,15 +10,13 @@ namespace GoogleSpeechToText.Scripts
     public class GoogleCloudSpeechToText : MonoBehaviour
     {
         // The API endpoint (including API key as a query parameter)
-        private const string apiEndpoint = "https://speech.googleapis.com/v1/speech:recognize?&key=";
+        private const string API_ENDPOINT = "https://speech.googleapis.com/v1/speech:recognize?&key=";
 
         // Sends a request to Google Speech-to-Text API
         // public static void SendSpeechToTextRequest(string audioUri, string apiKey, string accessToken, Action<string> onSuccess, Action<BadRequestData> onError)
         public static void SendSpeechToTextRequest(byte[] bytes, string apiKey, Action<string> onSuccess, Action<BadRequestData> onError)
         {
             string base64Content = Convert.ToBase64String(bytes);
-
-            
 
             var requestData = new SpeechToTextRequest
             {
@@ -44,7 +42,7 @@ namespace GoogleSpeechToText.Scripts
             };
 
             // Format the endpoint with the provided API key
-            string url =  apiEndpoint + apiKey;
+            string url = API_ENDPOINT + apiKey;
 
             // Serialize request data to JSON
             string requestJson = JsonUtility.ToJson(requestData);
@@ -55,34 +53,41 @@ namespace GoogleSpeechToText.Scripts
 
         private static async void Post(string url, string bodyJsonString, Action<string> onSuccess, Action<BadRequestData> onError, Dictionary<string, string> headers)
         {
-            var request = new UnityWebRequest(url, "POST");
-            var bodyRaw = Encoding.UTF8.GetBytes(bodyJsonString);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-
-            // Add headers to the request
-            foreach (var header in headers)
+            try
             {
-                request.SetRequestHeader(header.Key, header.Value);
+                var request = new UnityWebRequest(url, "POST");
+                var bodyRaw = Encoding.UTF8.GetBytes(bodyJsonString);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+
+                // Add headers to the request
+                foreach (var header in headers)
+                {
+                    request.SetRequestHeader(header.Key, header.Value);
+                }
+
+                var operation = request.SendWebRequest();
+
+                // Wait for the request to complete
+                while (!operation.isDone)
+                    await Task.Yield();
+
+                // Check for errors
+                if (HasError(request, out var badRequest))
+                {
+                    onError?.Invoke(badRequest);
+                }
+                else
+                {
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                }
+
+                request.Dispose();
             }
-
-            var operation = request.SendWebRequest();
-
-            // Wait for the request to complete
-            while (!operation.isDone)
-                await Task.Yield();
-
-            // Check for errors
-            if (HasError(request, out var badRequest))
+            catch (Exception e)
             {
-                onError?.Invoke(badRequest);
+                Debug.LogException(e);
             }
-            else
-            {
-                onSuccess?.Invoke(request.downloadHandler.text);
-            }
-
-            request.Dispose();
         }
 
         private static bool HasError(UnityWebRequest request, out BadRequestData badRequestData)
@@ -115,14 +120,14 @@ namespace GoogleSpeechToText.Scripts
     }
 
     // The request data format for Google Speech-to-Text API
-    [System.Serializable]
+    [Serializable]
     public class SpeechToTextRequest
     {
         public SpeechConfig config;
         public AudioData audio;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class SpeechConfig
     {
         public string encoding;
@@ -131,27 +136,27 @@ namespace GoogleSpeechToText.Scripts
         public bool enableWordTimeOffsets;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class AudioData
     {
         // public string uri;
-        public string  content;
+        public string content;
     }
 
     // Response format for Google Speech-to-Text API
-    [System.Serializable]
+    [Serializable]
     public class SpeechToTextResponse
     {
         public Result[] results;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class Result
     {
         public Alternative[] alternatives;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class Alternative
     {
         public string transcript;
@@ -159,13 +164,13 @@ namespace GoogleSpeechToText.Scripts
     }
 
     // Error response format
-    [System.Serializable]
+    [Serializable]
     public class BadRequestData
     {
         public Error error;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class Error
     {
         public int code;

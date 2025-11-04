@@ -1,3 +1,4 @@
+/*
 using System;
 using GoogleTextToSpeech.Scripts.Data;
 using TMPro;
@@ -19,8 +20,7 @@ namespace GoogleTextToSpeech.Scripts.Example
         {
             _errorReceived += ErrorReceived;
             _audioClipReceived += AudioClipReceived;
-            textToSpeech.GetSpeechAudioFromGoogle(inputField.text, voice, _audioClipReceived, _errorReceived);
-            
+            // textToSpeech.GetSpeechAudioFromGoogle(inputField.text, voice, _audioClipReceived, _errorReceived);
         }
 
         private void ErrorReceived(BadRequestData badRequestData)
@@ -36,3 +36,4 @@ namespace GoogleTextToSpeech.Scripts.Example
         }
     }
 }
+*/
