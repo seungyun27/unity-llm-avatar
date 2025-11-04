@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   languageCode: en-US
   name: en-US-Standard-E
+  speed: 1
+  pitch: 0

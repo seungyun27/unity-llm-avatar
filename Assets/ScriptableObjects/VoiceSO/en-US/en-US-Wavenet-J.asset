@@ -14,5 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   languageCode: en-US
   name: en-US-Wavenet-J
-  speed: 0.9
-  pitch: 0
