@@ -1,5 +1,4 @@
 using System;
-using GoogleTextToSpeech.Scripts.Data;
 using UnityEngine;
 using UnityLLMAvatar.GoogleApi;
 using UnityLLMAvatar.util;
@@ -12,6 +11,7 @@ namespace UnityLLMAvatar
         public VoiceScriptableObject Voice;
 
         [Header("Avatar's AudioSource")]
+        [Tooltip("Drag and drop the AudioSource component attached to the avatar here.")]
         public AudioSource AvatarAudioSource;
 
         public async void SaveAndPlaySpeech(TextToSpeechResponse ttsResponse)

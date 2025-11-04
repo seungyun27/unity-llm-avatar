@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4e09be29deb2cb4b83ad7880b54783f, type: 3}
-  m_Name: BL-en-US-Chirp3-HD-Enceladus
+  m_Name: en-US-Chirp3-HD-Leda
   m_EditorClassIdentifier: 
   languageCode: en-US
-  name: en-US-Chirp3-HD-Enceladus
+  name: en-US-Chirp3-HD-Leda
   speed: 1
   pitch: 0

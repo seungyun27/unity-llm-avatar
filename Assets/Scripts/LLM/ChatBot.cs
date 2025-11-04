@@ -78,26 +78,6 @@ namespace UnityLLMAvatar.LLM
 
         private void OnValidate()
         {
-            if (llmCharacter == null)
-            {
-                Debug.LogWarning("LLM Character is not assigned in ChatBot!");
-            }
-            
-            if (chatContainer == null)
-            {
-                Debug.LogWarning("Chat Container is not assigned in ChatBot!");
-            }
-
-            if (sprite == null)
-            {
-                Debug.LogWarning("Bubble Sprite is not assigned in ChatBot!");
-            }
-
-            if (stopButton == null)
-            {
-                Debug.LogWarning("Stop Button is not assigned in ChatBot!");
-            }
-            
             if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
             {
                 Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");

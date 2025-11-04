@@ -1,5 +1,4 @@
 using System;
-using GoogleTextToSpeech.Scripts.Data;
 
 namespace UnityLLMAvatar.GoogleApi
 {

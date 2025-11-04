@@ -19,7 +19,7 @@ namespace UnityLLMAvatar
         [SerializeField]
         private SpeechToTextManager _speechToTextManager;
 
-        private void Awake()
+        private void OnEnable()
         {
             _chatBot.OnResponseReceived += OnChatBotResponse;
         }
@@ -27,24 +27,6 @@ namespace UnityLLMAvatar
         private void OnDisable()
         {
             _chatBot.OnResponseReceived -= OnChatBotResponse;
-        }
-
-        private void OnValidate()
-        {
-            if (_chatBot == null)
-            {
-                Debug.LogWarning("ChatBot is not assigned in AIManager!");
-            }
-
-            if (_textToSpeechManager == null)
-            {
-                Debug.LogWarning("TextToSpeechManager is not assigned in AIManager!");
-            }
-
-            if (_speechToTextManager == null)
-            {
-                Debug.LogWarning("SpeechToTextManager is not assigned in AIManager!");
-            }
         }
 
         public async void ProcessSpeech(byte[] rawAudio)
@@ -69,7 +51,7 @@ namespace UnityLLMAvatar
                     llmResponse,
                     _textToSpeechManager.Voice);
                 
-                // 2. Play the speech audio!
+                // 2. Play the speech audio
                 _textToSpeechManager.SaveAndPlaySpeech(ttsResponse);
                 
                 // 3. Change button state to allow new recording
