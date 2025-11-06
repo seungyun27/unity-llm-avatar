@@ -1,0 +1,13 @@
+﻿"modelName","temperature","user","response","review_content","review_count","answer_content","answer_count"
+"llama-3.2-3b-instruct-q4_k_m",0.4,"Customer: Hello!","Review: Customer greeted the clerk with a casual ""Hello!"".
+Reply: Hi there, how can I assist you today?"," Customer greeted the clerk with a casual ""Hello!"".",8," Hi there, how can I assist you today?",8
+"llama-3.2-3b-instruct-q4_k_m",0.4,"Customer: Hey, how's business doing these days?","Review: Customer inquired about the store's current business performance.
+Reply: It's been steady, thanks for asking!"," Customer inquired about the store's current business performance.",8," It's been steady, thanks for asking!",6
+"llama-3.2-3b-instruct-q4_k_m",0.4,"Customer: How much is this bottle of orange juice?","Review: Customer asked about the price of a specific product (orange juice).
+Reply: That'll be $2.50 please."," Customer asked about the price of a specific product (orange juice).",11," That'll be $2.50 please.",4
+"llama-3.2-3b-instruct-q4_k_m",0.4,"Customer: Is there any toilet I can use?","Review: Customer inquired about using the store's facilities.
+Reply: Yes, our toilet is available behind the counter for your convenience."," Customer inquired about using the store's facilities.",7," Yes, our toilet is available behind the counter for your convenience.",11
+"llama-3.2-3b-instruct-q4_k_m",0.4,"Customer: Hey, how much for a cup of coffee from that coffee machine?","Review: Customer asked about the price of a specific product (coffee) from the self-serve coffee machine.
+Reply: Our regular coffee is $1.50, decaf coffee is $1.25, and latte is $2.00."," Customer asked about the price of a specific product (coffee) from the self-serve coffee machine.",15," Our regular coffee is $1.50, decaf coffee is $1.25, and latte is $2.00.",13
+"llama-3.2-3b-instruct-q4_k_m",0.4,"Customer: How much is this bottle of whisky?","Review: Customer asked about the price of a specific product (whisky) that QuickMart does not sell.
+Reply: We don't carry any alcoholic beverages here, including whisky."," Customer asked about the price of a specific product (whisky) that QuickMart does not sell.",15," We don't carry any alcoholic beverages here, including whisky.",9

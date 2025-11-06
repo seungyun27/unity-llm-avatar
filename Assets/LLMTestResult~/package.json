@@ -1,0 +1,16 @@
+{
+  "name": "llmtestresult~",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "export-to-csv": "^1.4.0",
+    "fast-xml-parser": "^5.2.5"
+  }
+}

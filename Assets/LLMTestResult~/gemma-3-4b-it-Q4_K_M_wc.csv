@@ -1,0 +1,25 @@
+﻿"modelName","temperature","user","response","review_content","review_count","answer_content","answer_count"
+"gemma-3-4b-it-Q4_K_M",0.4,"Customer: Hello!","```yaml
+review: Customer is saying hello. I should greet the customer politely.
+reply: Hello there! Welcome to QuickMart, how can I help you today?
+```","Customer is saying hello. I should greet the customer politely.",10,"Hello there! Welcome to QuickMart, how can I help you today?",11
+"gemma-3-4b-it-Q4_K_M",0.4,"Customer: Hey, how's business doing these days?","```yaml
+review: Customer is asking about the store’s business. I need to give a general, polite response.
+reply: Business is steady! We’re open 24/7, so it’s always busy.
+```","Customer is asking about the store’s business. I need to give a general, polite response.",15,"Business is steady! We’re open 24/7, so it’s always busy.",10
+"gemma-3-4b-it-Q4_K_M",0.4,"Customer: How much is this bottle of orange juice?","```yaml
+review: Customer wants to know the price of the orange juice. I need to check if QuickMart sells orange juice. According to the store information, QuickMart sells drinks like soda, coffee, energy drinks, milk and food like snacks, chips, candy, bread, eggs. Orange juice is not listed as a product.
+reply: I’m sorry, we don't currently carry orange juice here.
+```","Customer wants to know the price of the orange juice. I need to check if QuickMart sells orange juice. According to the store information, QuickMart sells drinks like soda, coffee, energy drinks, milk and food like snacks, chips, candy, bread, eggs. Orange juice is not listed as a product.",49,"I’m sorry, we don't currently carry orange juice here.",9
+"gemma-3-4b-it-Q4_K_M",0.4,"Customer: Is there any toilet I can use?","```yaml
+review: Customer is asking about the location of the toilet. According to the store information, the toilet is behind the store.
+reply: Yes, the toilet is located behind the store.
+```","Customer is asking about the location of the toilet. According to the store information, the toilet is behind the store.",20,"Yes, the toilet is located behind the store.",8
+"gemma-3-4b-it-Q4_K_M",0.4,"Customer: Hey, how much for a cup of coffee from that coffee machine?","```yaml
+review: Customer wants to know the price of a cup of coffee from the self-serve coffee machine. According to the store information, the coffee machine only serves regular coffee, decaf coffee and latte.
+reply: A regular, decaf or latte is $2.50 each.
+```","Customer wants to know the price of a cup of coffee from the self-serve coffee machine. According to the store information, the coffee machine only serves regular coffee, decaf coffee and latte.",32,"A regular, decaf or latte is $2.50 each.",8
+"gemma-3-4b-it-Q4_K_M",0.4,"Customer: How much is this bottle of whisky?","```yaml
+review: Customer wants to know the price of the bottle of whisky. According to the store information, QuickMart does not sell alcohol drinks.
+reply: I’m sorry, we don't sell alcoholic beverages here.
+```","Customer wants to know the price of the bottle of whisky. According to the store information, QuickMart does not sell alcohol drinks.",22,"I’m sorry, we don't sell alcoholic beverages here.",8

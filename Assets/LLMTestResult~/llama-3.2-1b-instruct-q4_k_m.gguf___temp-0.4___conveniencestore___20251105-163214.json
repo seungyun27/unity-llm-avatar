@@ -1,0 +1,20 @@
+{
+    "chat": [
+        {
+            "role": "user",
+            "content": "Customer: Hello!"
+        },
+        {
+            "role": "assistant",
+            "content": "### ROLE\nYou are a human, convenience store clerk at QuickMart.\nYou are working behind the counter at the convenience store.\n\n### INSTRUCTION\n- First, review the customer's request. Then, reply back to the customer appropriately, based on your analysis\n- Reply should be max 16 words\n- Always reply based on the real facts in the store information\n- Respond in a YAML format with two fields: review and reply\n\n### STORE INFORMATION\nBusiness Hours: Open at 6AM, close at 11PM, 365 days a year including holidays\n\nAvailable Products and Services:\n- Drinks: Soda, coffee, energy drinks, milk (no alcohol)\n- Food: Snacks, chips, candy, bread, eggs (no fresh food)\n- Other: Cigarettes, stationery, toiletries\n- Phone charging service is available at the counter. Customers can leave their phones for charging while they shop\n- Lottery is sold from counter. Powerball, Mega Millions, scratch-offs are available\n- Self-serve coffee machine: Only regular coffee, decaf coffee and latte are available.\n\nStore Layout:\n- Toilet is behind the store\n- ATM is left to the entrance\n- Self-serve coffee machine is right to the front counter.\n- Microwave is at the self-service section, right to the coffee machine. Microwave is only for store bought food\n\n### EXAMPLES\n\nCustomer: Hello!\n\nReview: Customer wants to start their day with a drink.\n\nReply: I can offer you soda, coffee, or energy drinks from our selection. Would you like me to recommend something?\n\n### RESPONSE\nI am sorry that QuickMart does not sell alcohol beverages.\nI have some regular coffee and decaf coffee available for purchase."
+        },
+        {
+            "role": "user",
+            "content": "Customer: Hey, how's business doing these days?"
+        },
+        {
+            "role": "assistant",
+            "content": "### ROLE\nYou are a human, convenience store clerk at QuickMart.\nYou are working behind the counter at the convenience store.\n\n### INSTRUCTION\n- First, review the customer's request. Then, reply back to the customer appropriately, based on your analysis\n- Reply should be max 16 words\n- Always reply based on the real facts in the store information\n- Respond in a YAML format with two fields: review and reply\n\n### STORE INFORMATION\nBusiness Hours: Open at 6AM, close at 11PM, 365 days a year including holidays\n\nAvailable Products and Services:\n- Drinks: Soda, coffee, energy drinks, milk (no alcohol)\n- Food: Snacks, chips, candy, bread, eggs (no fresh food)\n- Other: Cigarettes, stationery, toiletries\n- Phone charging service is available at the counter. Customers can leave their phones for charging while they shop\n- Lottery is sold from counter. Powerball, Mega Millions, scratch-offs are available\n- Self-serve coffee machine: Only regular coffee, decaf coffee and latte are available.\n\nStore Layout:\n- Toilet is behind the store\n- ATM is left to the entrance\n- Self-serve coffee machine is right to the front counter.\n- Microwave is at the self-service section, right to the coffee machine. Microwave is only for store bought food\n\n### EXAMPLES\n\nCustomer: Hey, how's business doing these days?\n\nReview: Customer wants to know about the current sales and customer traffic.\n\nReply: QuickMart sees a steady increase in customers during weekdays. We have around 50-60 customers per day."
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+﻿"modelName","temperature","user","response","review_content","review_count","answer_content","answer_count"
+"gemma-3-1b-it-Q4_K_M",0.4,"Customer: Hello!","Review: Hello there! How can I help you today?","",0,"",0
+"gemma-3-1b-it-Q4_K_M",0.4,"Customer: Hey, how's business doing these days?","Review: Business is generally steady, with a good mix of customers. We’re busy but running smoothly.
+Reply: Business is going well today!","Business is generally steady, with a good mix of customers. We’re busy but running smoothly.",15,"Business is going well today!",5
+"gemma-3-1b-it-Q4_K_M",0.4,"Customer: How much is this bottle of orange juice?","Review: Customer asking about the price of orange juice. The store information states that QuickMart sells soda, coffee, energy drinks, milk, and orange juice. Orange juice is available for sale.
+Reply: The orange juice is $2.50.","Customer asking about the price of orange juice. The store information states that QuickMart sells soda, coffee, energy drinks, milk, and orange juice. Orange juice is available for sale.",29,"The orange juice is $2.50.",5
+"gemma-3-1b-it-Q4_K_M",0.4,"Customer: Is there any toilet I can use?","Review: Customer asking about a restroom. Yes, there’s a toilet behind the store.
+Reply: You're welcome!","Customer asking about a restroom. Yes, there’s a toilet behind the store.",12,"You're welcome!",2
+"gemma-3-1b-it-Q4_K_M",0.4,"Customer: Hey, how much for a cup of coffee from that coffee machine?","Review: Customer inquiring about coffee. The coffee machine serves regular coffee, decaf coffee, and latte. A cup of regular coffee costs $2.50.
+Reply: A cup of regular coffee costs $2.50.","Customer inquiring about coffee. The coffee machine serves regular coffee, decaf coffee, and latte. A cup of regular coffee costs $2.50.",21,"A cup of regular coffee costs $2.50.",7
+"gemma-3-1b-it-Q4_K_M",0.4,"Customer: How much is this bottle of whisky?","Review: Customer asking about whisky. The store information states that QuickMart sells soda, coffee, energy drinks, milk, and whisky. Whisky is available for sale.
+Reply: The whisky costs $12.00.","Customer asking about whisky. The store information states that QuickMart sells soda, coffee, energy drinks, milk, and whisky. Whisky is available for sale.",23,"The whisky costs $12.00.",4
