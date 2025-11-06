@@ -1,12 +1,14 @@
 using System;
 
-namespace UnityLLMAvatar.GoogleApi
+namespace UnityLLMAvatar.GoogleApi.DTO
 {
     [Serializable]
-    public class SpeechToTextRequest
+    public struct SpeechToTextRequest
     {
+        #region Nested fields
+
         [Serializable]
-        public class SpeechConfig
+        public struct SpeechConfig
         {
             public string encoding;
             public int sampleRateHertz;
@@ -15,11 +17,13 @@ namespace UnityLLMAvatar.GoogleApi
         }
         
         [Serializable]
-        public class AudioData
+        public struct AudioData
         {
             // public string uri;
             public string content;
         }
+
+        #endregion
         
         public SpeechConfig config;
         public AudioData audio;
@@ -46,13 +50,13 @@ namespace UnityLLMAvatar.GoogleApi
 
     // Response format for Google Speech-to-Text API
     [Serializable]
-    public class SpeechToTextResponse
+    public struct SpeechToTextResponse
     {
         [Serializable]
-        public class Result
+        public struct Result
         {
             [Serializable]
-            public class Alternative
+            public struct Alternative
             {
                 public string transcript;
                 public float confidence;

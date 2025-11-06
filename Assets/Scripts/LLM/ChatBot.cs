@@ -4,25 +4,25 @@ using System.Threading.Tasks;
 using LLMUnity;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityLLMAvatar.util;
+using UnityLLMAvatar.Utility;
 
 namespace UnityLLMAvatar.LLM
 {
     public class ChatBot : MonoBehaviour
     {
         #region Public Fields
-        public LLMCharacter llmCharacter;
-        public RectTransform chatContainer;
-        public Color playerColor = new Color32(81, 164, 81, 255);
-        public Color aiColor = new Color32(29, 29, 73, 255);
-        public Color fontColor = Color.white;
-        public Font font;
-        public int fontSize = 16;
-        public int bubbleWidth = 600;
-        public float textPadding = 10f;
-        public float bubbleSpacing = 10f;
-        public Sprite sprite;
-        public Button stopButton;
+        public LLMCharacter LLMCharacter;
+        public RectTransform ChatContainer;
+        public Color PlayerColor = new Color32(81, 164, 81, 255);
+        public Color AIColor = new Color32(29, 29, 73, 255);
+        public Color FontColor = Color.white;
+        public Font Font;
+        public int FontSize = 16;
+        public int BubbleWidth = 600;
+        public float TextPadding = 10f;
+        public float BubbleSpacing = 10f;
+        public Sprite Sprite;
+        public Button StopButton;
         #endregion
 
         #region LLM Response Callbacks
@@ -32,12 +32,12 @@ namespace UnityLLMAvatar.LLM
         #endregion
 
         #region Private Fields
-        private InputBubble inputBubble;
-        private readonly List<Bubble> chatBubbles = new();
-        private bool blockInput = true;
-        private BubbleUI playerUI, aiUI;
-        private bool warmUpDone = false;
-        private int lastBubbleOutsideFOV = -1;
+        private InputBubble _inputBubble;
+        private readonly List<Bubble> _chatBubbles = new();
+        private bool _blockInput = true;
+        private BubbleUI _playerUI, _aiUI;
+        private bool _warmUpDone;
+        private int _lastBubbleOutsideFOV = -1;
         #endregion
 
         #region Unity Event Functions
@@ -52,25 +52,25 @@ namespace UnityLLMAvatar.LLM
             // var logFile = $"{logDir}/{modelName}___temp-{temperature}___conveniencestore___{timestamp}";
             // llmCharacter.save = logFile;
             // print($"saving chat log to: {logFile}");
-            InitializeLLM();
+            InitializeLlm();
         }
         
         private void Update()
         {
-            if (!inputBubble.inputFocused() && warmUpDone)
+            if (!_inputBubble.inputFocused() && _warmUpDone)
             {
-                inputBubble.ActivateInputField();
+                _inputBubble.ActivateInputField();
                 StartCoroutine(BlockInteraction());
             }
-            if (lastBubbleOutsideFOV != -1)
+            if (_lastBubbleOutsideFOV != -1)
             {
                 // destroy bubbles outside the container
-                for (int i = 0; i <= lastBubbleOutsideFOV; i++)
+                for (int i = 0; i <= _lastBubbleOutsideFOV; i++)
                 {
-                    chatBubbles[i].Destroy();
+                    _chatBubbles[i].Destroy();
                 }
-                chatBubbles.RemoveRange(0, lastBubbleOutsideFOV + 1);
-                lastBubbleOutsideFOV = -1;
+                _chatBubbles.RemoveRange(0, _lastBubbleOutsideFOV + 1);
+                _lastBubbleOutsideFOV = -1;
             }
         }
 
@@ -78,9 +78,9 @@ namespace UnityLLMAvatar.LLM
 
         private void OnValidate()
         {
-            if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
+            if (onValidateWarning && !LLMCharacter.remote && LLMCharacter.llm != null && LLMCharacter.llm.model == "")
             {
-                Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                Debug.LogWarning($"Please select a model in the {LLMCharacter.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
         }
@@ -88,7 +88,7 @@ namespace UnityLLMAvatar.LLM
         
         public async Task SendMessageAsync(string message)
         {
-            if (blockInput || string.IsNullOrWhiteSpace(message))
+            if (_blockInput || string.IsNullOrWhiteSpace(message))
             {
                 Debug.LogWarning("Cannot send message: input is blocked or message is empty");
                 return;
@@ -96,7 +96,7 @@ namespace UnityLLMAvatar.LLM
             
             try
             {
-                blockInput = true;
+                _blockInput = true;
 			
                 // Normalize message
                 var normalizedMessage = message.Replace("\v", "\n").Trim();
@@ -109,7 +109,7 @@ namespace UnityLLMAvatar.LLM
 			
                 // Send to LLM
                 var formattedMessage = $"<request>{normalizedMessage}</request>";
-                var llmResponse = await llmCharacter.Chat(
+                var llmResponse = await LLMCharacter.Chat(
                     query: formattedMessage, 
                     callback: aiBubble.SetThinkingText,
                     completionCallback: AllowInput);
@@ -125,7 +125,7 @@ namespace UnityLLMAvatar.LLM
             catch (Exception e)
             {
                 Debug.LogException(e);
-                blockInput = false;
+                _blockInput = false;
             }
         }
 
@@ -133,18 +133,17 @@ namespace UnityLLMAvatar.LLM
         {
             try
             {
-                inputBubble.ActivateInputField();
+                _inputBubble.ActivateInputField();
 
-                if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) ||
+                if (_blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) ||
                     Input.GetKey(KeyCode.RightShift))
                 {
                     StartCoroutine(BlockInteraction());
                     return;
                 }
 
-                var message = inputBubble.GetText();
-                inputBubble.SetText("");
-
+                var message = _inputBubble.GetText();
+                _inputBubble.SetText("");
 
                 await SendMessageAsync(message);
             }
@@ -154,60 +153,60 @@ namespace UnityLLMAvatar.LLM
             }
         }
         
-        private void InitializeLLM()
+        private void InitializeLlm()
         {
-            llmCharacter.SetPrompt(SystemPrompts.ConvenienceStoreClerk);
-            llmCharacter.grammarString = XMLGrammar.Grammar;
+            LLMCharacter.SetPrompt(SystemPrompts.ConvenienceStoreClerk);
+            LLMCharacter.grammarString = XMLGrammar.Grammar;
 
-            _ = llmCharacter.Warmup(WarmUpCallback);
+            _ = LLMCharacter.Warmup(WarmUpCallback);
         }
 
         private void InitializeUI()
         {
-            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            playerUI = new BubbleUI
+            if (Font == null) Font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            _playerUI = new BubbleUI
             {
-                sprite = sprite,
-                font = font,
-                fontSize = fontSize,
-                fontColor = fontColor,
-                bubbleColor = playerColor,
+                sprite = Sprite,
+                font = Font,
+                fontSize = FontSize,
+                fontColor = FontColor,
+                bubbleColor = PlayerColor,
                 bottomPosition = 0,
                 leftPosition = 0,
-                textPadding = textPadding,
-                bubbleOffset = bubbleSpacing,
-                bubbleWidth = bubbleWidth,
+                textPadding = TextPadding,
+                bubbleOffset = BubbleSpacing,
+                bubbleWidth = BubbleWidth,
                 bubbleHeight = -1
             };
-            aiUI = playerUI;
-            aiUI.bubbleColor = aiColor;
-            aiUI.leftPosition = 1;
+            _aiUI = _playerUI;
+            _aiUI.bubbleColor = AIColor;
+            _aiUI.leftPosition = 1;
 
-            inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Loading...", 4);
-            inputBubble.AddSubmitListener(OnKeyboardInput);
-            inputBubble.AddValueChangedListener(OnValueChanged);
-            inputBubble.setInteractable(false);
-            stopButton.gameObject.SetActive(true);
+            _inputBubble = new InputBubble(ChatContainer, _playerUI, "InputBubble", "Loading...", 4);
+            _inputBubble.AddSubmitListener(OnKeyboardInput);
+            _inputBubble.AddValueChangedListener(OnValueChanged);
+            _inputBubble.setInteractable(false);
+            StopButton.gameObject.SetActive(true);
         }
 
         private Bubble AddBubble(string message, bool isPlayerMessage)
         {
-            Bubble bubble = new Bubble(chatContainer, isPlayerMessage ? playerUI : aiUI, isPlayerMessage ? "PlayerBubble" : "AIBubble", message);
-            chatBubbles.Add(bubble);
+            Bubble bubble = new Bubble(ChatContainer, isPlayerMessage ? _playerUI : _aiUI, isPlayerMessage ? "PlayerBubble" : "AIBubble", message);
+            _chatBubbles.Add(bubble);
             bubble.OnResize(UpdateBubblePositions);
             return bubble;
         }
 
         private void ShowLoadedMessages()
         {
-            for (int i = 1; i < llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].content, i % 2 == 1);
+            for (int i = 1; i < LLMCharacter.chat.Count; i++) AddBubble(LLMCharacter.chat[i].content, i % 2 == 1);
         }
         
         private async void WarmUpCallback()
         {
             try
             {
-                warmUpDone = true;
+                _warmUpDone = true;
 
                 // After warmup, greet the user first
                 var message = "Hello!";
@@ -215,7 +214,7 @@ namespace UnityLLMAvatar.LLM
                 Bubble aiBubble = AddBubble("⋯", false);
 
                 message = $"<request>{message}</request>";
-                string firstResponse = await llmCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
+                string firstResponse = await LLMCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
 
                 var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
                 Debug.Log(parsedResponse);
@@ -223,7 +222,7 @@ namespace UnityLLMAvatar.LLM
 
                 OnResponseReceived?.Invoke(parsedResponse.Answer);
 
-                inputBubble.SetPlaceHolderText("Message me");
+                _inputBubble.SetPlaceHolderText("Message me");
                 AllowInput();
             }
             catch (Exception e)
@@ -234,18 +233,18 @@ namespace UnityLLMAvatar.LLM
 
         private void AllowInput()
         {
-            blockInput = false;
-            inputBubble.ReActivateInputField();
+            _blockInput = false;
+            _inputBubble.ReActivateInputField();
         }
 
         private IEnumerator<string> BlockInteraction()
         {
             // prevent from change until next frame
-            inputBubble.setInteractable(false);
+            _inputBubble.setInteractable(false);
             yield return null;
-            inputBubble.setInteractable(true);
+            _inputBubble.setInteractable(true);
             // change the caret position to the end of the text
-            inputBubble.MoveTextEnd();
+            _inputBubble.MoveTextEnd();
         }
 
         private void OnValueChanged(string newText)
@@ -253,34 +252,34 @@ namespace UnityLLMAvatar.LLM
             // Get rid of newline character added when we press enter
             if (Input.GetKey(KeyCode.Return))
             {
-                if (inputBubble.GetText().Trim() == "")
-                    inputBubble.SetText("");
+                if (_inputBubble.GetText().Trim() == "")
+                    _inputBubble.SetText("");
             }
         }
 
         private void UpdateBubblePositions()
         {
-            float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
+            float y = _inputBubble.GetSize().y + _inputBubble.GetRectTransform().offsetMin.y + BubbleSpacing;
             // float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
-            float containerHeight = chatContainer.rect.height;
-            for (int i = chatBubbles.Count - 1; i >= 0; i--)
+            float containerHeight = ChatContainer.rect.height;
+            for (int i = _chatBubbles.Count - 1; i >= 0; i--)
             {
-                Bubble bubble = chatBubbles[i];
+                Bubble bubble = _chatBubbles[i];
                 RectTransform childRect = bubble.GetRectTransform();
                 childRect.anchoredPosition = new Vector2(childRect.anchoredPosition.x, y);
 
                 // last bubble outside the container
-                if (y > containerHeight && lastBubbleOutsideFOV == -1)
+                if (y > containerHeight && _lastBubbleOutsideFOV == -1)
                 {
-                    lastBubbleOutsideFOV = i;
+                    _lastBubbleOutsideFOV = i;
                 }
-                y += bubble.GetSize().y + bubbleSpacing;
+                y += bubble.GetSize().y + BubbleSpacing;
             }
         }
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            LLMCharacter.CancelRequests();
             AllowInput();
         }
         

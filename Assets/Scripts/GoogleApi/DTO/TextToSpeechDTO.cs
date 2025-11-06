@@ -1,30 +1,37 @@
 using System;
+using System.Text;
+using Unity.Plastic.Newtonsoft.Json;
 
-namespace UnityLLMAvatar.GoogleApi
+namespace UnityLLMAvatar.GoogleApi.DTO
 {
     [Serializable]
-    public class TextToSpeechRequest
+    public struct TextToSpeechRequest
     {
+        #region Nested Fields
+
         [Serializable]
-        public class Input
+        public struct Input
         {
             public string text;
         }
 
         [Serializable]
-        public class Voice
+        public struct Voice
         {
             public string languageCode;
             public string name;
         }
 
         [Serializable]
-        public class AudioConfig
+        public struct AudioConfig
         {
             public string audioEncoding;
             public float pitch;
             public float speakingRate;
         }
+
+        #endregion
+        
         public Input input;
         public Voice voice;
         public AudioConfig audioConfig;
@@ -56,7 +63,7 @@ namespace UnityLLMAvatar.GoogleApi
     }
     
     [Serializable]
-    public class TextToSpeechResponse
+    public struct TextToSpeechResponse
     {
         public string audioContent;
 

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 
-namespace UnityLLMAvatar.util
+namespace UnityLLMAvatar.Utility
 {
     public static class UnityAsyncExtensions
     {

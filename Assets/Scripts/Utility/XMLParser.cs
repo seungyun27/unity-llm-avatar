@@ -2,8 +2,17 @@ using System.Xml;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 
-namespace UnityLLMAvatar.util
+namespace UnityLLMAvatar.Utility
 {
+    public struct LLMResponse
+    {
+        public string Topic;
+        public string Analysis;
+        public string Answer; 
+
+        public override string ToString() => JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+    
     public static class XMLParser
     {
         public static LLMResponse ParseLLMResponse(string xmlString)
@@ -29,21 +38,6 @@ namespace UnityLLMAvatar.util
         {
             var node = xmlDoc.SelectSingleNode(xpath);
             return node?.InnerText ?? "";
-        }
-    }
-
-    public class LLMResponse
-    {
-        public string Topic;
-        public string Analysis;
-        public string Answer; 
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(
-                this,
-                Formatting.Indented
-            );
         }
     }
 }

@@ -1,46 +1,60 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityLLMAvatar.GoogleApi;
-using UnityLLMAvatar.util;
+using UnityLLMAvatar.Utility;
 
 namespace UnityLLMAvatar
 {
     public class SpeechToTextManager : MonoBehaviour
-    {
-        public AIManager AIManager;
-        public Button RecordButton;
-        public Button RecordStopButton;
+    {        
+        [SerializeField] 
+        private Button _recordButton;
+        
+        [SerializeField] 
+        private Button _recordStopButton;
         
         private AudioClip clip;
         private bool _isRecording;
 
+        public Action<byte[]> OnSpeechRecorded = delegate { };
+
+        #region Event Function
+
         private void Awake()
         {
-            RecordButton.interactable = false;
-            RecordStopButton.interactable = false;
+            _recordButton.interactable = false;
+            _recordStopButton.interactable = false;
+        }
+        
+        private void OnEnable()
+        {
+            _recordButton.onClick.AddListener(StartRecording);
+            _recordStopButton.onClick.AddListener(StopRecording);
         }
 
         private void OnDisable()
         {
-            RecordButton.onClick.RemoveListener(StartRecording);
-            RecordStopButton.onClick.RemoveListener(StopRecording);
+            _recordButton.onClick.RemoveListener(StartRecording);
+            _recordStopButton.onClick.RemoveListener(StopRecording);
         }
 
+        #endregion
+        
         public void ChangeRecordButtonState()
         {
-            RecordButton.interactable = true;
-            RecordButton.onClick.AddListener(StartRecording);
+            _recordButton.interactable = true;
+            _recordButton.onClick.AddListener(StartRecording);
 
-            RecordStopButton.interactable = false;
-            RecordStopButton.onClick.AddListener(StopRecording);
+            _recordStopButton.interactable = false;
+            _recordStopButton.onClick.AddListener(StopRecording);
         }
 
         public void StartRecording()
         {
             if (_isRecording) return;
 
-            RecordButton.interactable = false;
-            RecordStopButton.interactable = true;
+            _recordButton.interactable = false;
+            _recordStopButton.interactable = true;
             clip = Microphone.Start(null, false, 10, 44100);
             _isRecording = true;
             
@@ -51,16 +65,16 @@ namespace UnityLLMAvatar
         {
             if (!_isRecording) return;
             
-            RecordButton.interactable = false;
-            RecordStopButton.interactable = false;
+            _recordButton.interactable = false;
+            _recordStopButton.interactable = false;
             
             int position = Microphone.GetPosition(null);
             Microphone.End(null);
-            var rawAudio = clip.GetSamplesAsWAV(position);
+            var rawAudio = clip.GetSamplesAsWav(position);
             _isRecording = false;
             Debug.Log("Recording stopped.");
             
-            AIManager.ProcessSpeech(rawAudio);
+            OnSpeechRecorded?.Invoke(rawAudio);
         }
     }
 }

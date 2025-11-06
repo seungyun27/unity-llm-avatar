@@ -4,64 +4,51 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityLLMAvatar.util;
+using UnityLLMAvatar.GoogleApi.DTO;
+using UnityLLMAvatar.Utility;
 
 namespace UnityLLMAvatar.GoogleApi
 {
-    // Error response format
-    [Serializable]
-    public class GoogleApiError
-    {
-        [Serializable]
-        public class Error
-        {
-            public int code;
-            public string message;
-        }
-        
-        public Error error;
-
-        public GoogleApiError(UnityWebRequest request)
-        {
-            error = new Error()
-            {
-                code = (int)request.responseCode,
-                message = request.error
-            };
-        }
-    }
-    
     public class GoogleApiException : Exception
     {
         public string ErrorMessage { get; }
         public int Code { get; }
 
-        public GoogleApiException(GoogleApiError error) : base(error.error.message)
+        public GoogleApiException(GoogleApiError error) : base(error.Error.Message)
         {
-            ErrorMessage = error.error.message;
-            Code = error.error.code;
+            ErrorMessage = error.Error.Message;
+            Code = error.Error.Code;
         }
     }
-    
+
     public static class GoogleApiRequestService
     {
         private const string STT_URL = "https://speech.googleapis.com/v1/speech:recognize";
         private const string TTS_URL = "https://texttospeech.googleapis.com/v1/text:synthesize";
-        
+
         public static async Task<string> SendSpeechToTextRequestAsync(byte[] rawAudio)
         {
             var payload = SpeechToTextRequest.MakeInstance(rawAudio);
-            var response = await PostAsync(
-                url: STT_URL,
-                body: PayloadConverter.ToBytes(payload),
-                headers: new Dictionary<string, string>
-                {
-                    { "Content-Type", "application/json; charset=utf-8" },
-                    { "X-Goog-Api-Key", EnvManager.GetApiKey("TTS_API_KEY") }
-                });
-            
+
+            var response = string.Empty;
+            try
+            {
+                response = await PostAsync(
+                    url: STT_URL,
+                    body: payload.ToBytes(),
+                    headers: new Dictionary<string, string>
+                    {
+                        { "Content-Type", "application/json; charset=utf-8" },
+                        { "X-Goog-Api-Key", EnvManager.GetApiKey("TTS_API_KEY") }
+                    });
+            }
+            catch (GoogleApiException ex)
+            {
+                Debug.LogException(ex);
+            }
+
             var speechResponse = JsonConvert.DeserializeObject<SpeechToTextResponse>(response);
-            
+
             var transcript = speechResponse.results[0].alternatives[0].transcript;
             Debug.Log($"User speech transcript: {transcript}");
             return transcript;
@@ -72,14 +59,24 @@ namespace UnityLLMAvatar.GoogleApi
             VoiceScriptableObject voice)
         {
             var payload = TextToSpeechRequest.MakeInstance(text, voice);
-            var response =  await PostAsync(
-                url: TTS_URL,
-                body: PayloadConverter.ToBytes(payload),
-                headers: new Dictionary<string, string>
-                {
-                    { "Content-Type", "application/json; charset=utf-8" },
-                    { "X-Goog-Api-Key", EnvManager.GetApiKey("TTS_API_KEY") }
-                });
+            
+            var response = string.Empty;
+            try
+            {
+                response = await PostAsync(
+                    url: TTS_URL,
+                    body: payload.ToBytes(),
+                    headers: new Dictionary<string, string>
+                    {
+                        { "Content-Type", "application/json; charset=utf-8" },
+                        { "X-Goog-Api-Key", EnvManager.GetApiKey("TTS_API_KEY") }
+                    });
+            }
+            catch (GoogleApiException ex)
+            {
+                Debug.LogException(ex);
+            }
+
             return JsonConvert.DeserializeObject<TextToSpeechResponse>(response);
         }
 
@@ -93,7 +90,7 @@ namespace UnityLLMAvatar.GoogleApi
                 method: "POST",
                 uploadHandler: new UploadHandlerRaw(body),
                 downloadHandler: new DownloadHandlerBuffer());
-            
+
             // Set headers
             foreach (var (k, v) in headers)
             {
@@ -102,19 +99,16 @@ namespace UnityLLMAvatar.GoogleApi
 
             await request.SendWebRequest();
 
-            if (HasError(request, out var apiError))
-            {
-                throw new GoogleApiException(apiError);
-            }
-
-            return request.downloadHandler.text;
+            return HasError(request, out var apiError)
+                ? throw new GoogleApiException(apiError)
+                : request.downloadHandler.text;
         }
 
         private static bool HasError(UnityWebRequest request, out GoogleApiError googleApiError)
         {
             if (request.responseCode is 200 or 201)
             {
-                googleApiError = null;
+                googleApiError = default;
                 return false;
             }
 

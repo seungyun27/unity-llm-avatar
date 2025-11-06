@@ -1,0 +1,22 @@
+{
+    "name": "UnityLLMAvatar",
+    "rootNamespace": "UnityLLMAvatar",
+    "references": [
+        "GUID:0022c094e0c7f481288196a6d3e9ce33",
+        "GUID:3be1a0372af54c52a1bc7dc647f54d5e",
+        "GUID:c864cd2730c997681836ab7f5f8081d0",
+        "GUID:cf7c06d97d9c3b7db881733f839f5ae3",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "GUID:343deaaf83e0cee4ca978e7df0b80d21",
+        "GUID:21b0c8d1703a94250bfac916590cea4f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

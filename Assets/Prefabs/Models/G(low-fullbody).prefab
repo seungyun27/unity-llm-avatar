@@ -1514,6 +1514,7 @@ GameObject:
   - component: {fileID: 905676447188487390}
   - component: {fileID: 5937671155105891218}
   - component: {fileID: 6477651476463236908}
+  - component: {fileID: 6335136872911100320}
   m_Layer: 0
   m_Name: G(low-fullbody)
   m_TagString: Untagged
@@ -1547,7 +1548,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6202961833356297238}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: 135b456f38897dd40a0dcf22218087bb, type: 3}
   m_Controller: {fileID: 9100000, guid: b34a08a2d29ecd3478fbe69bf4ac3e9d, type: 2}
   m_CullingMode: 0
@@ -1591,6 +1592,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blinkDuration: 0.1
   blinkInterval: 3
+--- !u!114 &6335136872911100320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202961833356297238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679e39cccf0e6de449b66be6d2baa608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Voice: {fileID: 11400000, guid: 37d4420f29a03964bac2b7a20fe4040c, type: 2}
+  AvatarAudioSource: {fileID: 3063351077748139634}
 --- !u!1 &6523810142341118368
 GameObject:
   m_ObjectHideFlags: 0

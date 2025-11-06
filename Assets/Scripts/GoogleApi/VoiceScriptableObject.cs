@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityLLMAvatar.util;
+using UnityLLMAvatar.Utility;
 
 namespace UnityLLMAvatar.GoogleApi
 {
@@ -8,8 +8,10 @@ namespace UnityLLMAvatar.GoogleApi
     {
         public string languageCode;
         public new string name;
+        
         [Range(0.25f, 4f)]
-        public float speed = 1;
+        public float speed;
+
         [Range(-20f, 20f)]
         public float pitch;
 

@@ -1,8 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
-using System;
 using LLMUnity;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace UnityLLMAvatar.LLM
 {
@@ -174,7 +174,7 @@ namespace UnityLLMAvatar.LLM
 
         public void Destroy()
         {
-            UnityEngine.Object.Destroy(bubbleObject);
+            Object.Destroy(bubbleObject);
         }
     }
 
@@ -244,12 +244,12 @@ namespace UnityLLMAvatar.LLM
             }
         }
 
-        public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit)
+        public void AddSubmitListener(UnityAction<string> onInputFieldSubmit)
         {
             inputField.onSubmit.AddListener(onInputFieldSubmit);
         }
 
-        public void AddValueChangedListener(UnityEngine.Events.UnityAction<string> onValueChanged)
+        public void AddValueChangedListener(UnityAction<string> onValueChanged)
         {
             inputField.onValueChanged.AddListener(onValueChanged);
         }

@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 using UnityLLMAvatar.GoogleApi;
-using UnityLLMAvatar.util;
+using UnityLLMAvatar.GoogleApi.DTO;
+using UnityLLMAvatar.Utility;
 
 namespace UnityLLMAvatar
 {
@@ -18,8 +19,17 @@ namespace UnityLLMAvatar
         {
             try
             {
-                var filePath = await AudioHelper.SaveAsMP3(Convert.FromBase64String(ttsResponse.audioContent));
-                var clip = await AudioHelper.LoadAudioClipFromMP3(filePath);
+                var filePath = await AudioHelper.SaveAsMp3(Convert.FromBase64String(ttsResponse.audioContent));
+                
+                AudioClip clip = null;
+                try
+                {
+                    clip = await AudioHelper.LoadAudioClipFromMp3(filePath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
                 
                 AvatarAudioSource.Stop();
                 AvatarAudioSource.clip = clip;

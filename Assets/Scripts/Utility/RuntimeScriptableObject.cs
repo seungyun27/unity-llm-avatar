@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnityLLMAvatar.util
+namespace UnityLLMAvatar.Utility
 {
     public abstract class RuntimeScriptableObject : ScriptableObject
     {
@@ -11,7 +11,10 @@ namespace UnityLLMAvatar.util
         private void OnDisable() => _instances.Remove(this);
 
         protected abstract void OnReset();
-
+        
+        /// <summary>
+        /// Resets all instances of RuntimeScriptableObject before any scene is loaded.
+        /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void ResetAllInstances()
         {

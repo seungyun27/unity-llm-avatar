@@ -1,35 +1,39 @@
 using System;
-using LLMUnity;
 using UnityEngine;
 using UnityLLMAvatar.GoogleApi;
 using UnityLLMAvatar.LLM;
 
 namespace UnityLLMAvatar
 {
+    [RequireComponent(typeof(SpeechToTextManager), typeof(ChatBot))]
     public class AIManager : MonoBehaviour
     {
-        [Header("LLM ChatBot")]
+        [Tooltip("Drag and drop the Virtual Character prefab here.")]
         [SerializeField]
+        private TextToSpeechManager _virtualCharacter;
+
         private ChatBot _chatBot;
-
-        [Header("Google API")]
-        [SerializeField]
-        private TextToSpeechManager _textToSpeechManager;
-
-        [SerializeField]
         private SpeechToTextManager _speechToTextManager;
+
+        private void Awake()
+        {
+            _speechToTextManager = GetComponent<SpeechToTextManager>();
+            _chatBot = GetComponent<ChatBot>();
+        }
 
         private void OnEnable()
         {
             _chatBot.OnResponseReceived += OnChatBotResponse;
+            _speechToTextManager.OnSpeechRecorded += ProcessSpeech;
         }
 
         private void OnDisable()
         {
             _chatBot.OnResponseReceived -= OnChatBotResponse;
+            _speechToTextManager.OnSpeechRecorded -= ProcessSpeech;
         }
 
-        public async void ProcessSpeech(byte[] rawAudio)
+        private async void ProcessSpeech(byte[] rawAudio)
         {
             try
             {
@@ -41,7 +45,7 @@ namespace UnityLLMAvatar
                 Debug.LogException(e);
             }
         }
-        
+
         private async void OnChatBotResponse(string llmResponse)
         {
             try
@@ -49,11 +53,11 @@ namespace UnityLLMAvatar
                 // 1. LLM response -> Google TTS -> Speech audio
                 var ttsResponse = await GoogleApiRequestService.SendTextToSpeechRequestAsync(
                     llmResponse,
-                    _textToSpeechManager.Voice);
-                
+                    _virtualCharacter.Voice);
+
                 // 2. Play the speech audio
-                _textToSpeechManager.SaveAndPlaySpeech(ttsResponse);
-                
+                _virtualCharacter.SaveAndPlaySpeech(ttsResponse);
+
                 // 3. Change button state to allow new recording
                 _speechToTextManager.ChangeRecordButtonState();
             }
