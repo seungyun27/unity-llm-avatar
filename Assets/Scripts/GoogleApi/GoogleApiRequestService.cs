@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityLLMAvatar.GoogleApi.DTO;
 using UnityLLMAvatar.Utility;
+using Debug = UnityEngine.Debug;
 
 namespace UnityLLMAvatar.GoogleApi
 {
@@ -33,6 +35,9 @@ namespace UnityLLMAvatar.GoogleApi
             var response = string.Empty;
             try
             {
+                var timer = new Stopwatch();
+                timer.Start();
+
                 response = await PostAsync(
                     url: STT_URL,
                     body: payload.ToBytes(),
@@ -41,6 +46,9 @@ namespace UnityLLMAvatar.GoogleApi
                         { "Content-Type", "application/json; charset=utf-8" },
                         { "X-Goog-Api-Key", EnvManager.GetApiKey("TTS_API_KEY") }
                     });
+
+                timer.Stop();
+                Debug.Log($"[STT_API]{timer.ElapsedMilliseconds}");
             }
             catch (GoogleApiException ex)
             {
@@ -63,6 +71,9 @@ namespace UnityLLMAvatar.GoogleApi
             var response = string.Empty;
             try
             {
+                var timer = new Stopwatch();
+                timer.Start();
+                
                 response = await PostAsync(
                     url: TTS_URL,
                     body: payload.ToBytes(),
@@ -71,6 +82,9 @@ namespace UnityLLMAvatar.GoogleApi
                         { "Content-Type", "application/json; charset=utf-8" },
                         { "X-Goog-Api-Key", EnvManager.GetApiKey("TTS_API_KEY") }
                     });
+
+                timer.Stop();
+                Debug.Log($"[TTS_API]{timer.ElapsedMilliseconds}");
             }
             catch (GoogleApiException ex)
             {

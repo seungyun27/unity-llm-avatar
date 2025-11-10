@@ -56,7 +56,7 @@ namespace UnityLLMAvatar
                     _virtualCharacter.Voice);
 
                 // 2. Play the speech audio
-                _virtualCharacter.SaveAndPlaySpeech(ttsResponse);
+                // _virtualCharacter.SaveAndPlaySpeech(ttsResponse);
 
                 // 3. Change button state to allow new recording
                 _speechToTextManager.ChangeRecordButtonState();

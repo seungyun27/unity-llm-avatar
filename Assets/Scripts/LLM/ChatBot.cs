@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using LLMUnity;
 using UnityEngine;
@@ -45,13 +46,13 @@ namespace UnityLLMAvatar.LLM
         {
             InitializeUI();
             ShowLoadedMessages();
-            // var modelName = llmCharacter.llm.model;
-            // var temperature = llmCharacter.temperature;
-            // var timestamp = System.DateTime.Now.ToString("yyyyMMdd-HHmmss");
-            // var logDir = Path.Combine(Application.dataPath, "LLMTestResult~");
-            // var logFile = $"{logDir}/{modelName}___temp-{temperature}___conveniencestore___{timestamp}";
-            // llmCharacter.save = logFile;
-            // print($"saving chat log to: {logFile}");
+            var modelName = LLMCharacter.llm.model;
+            var temperature = LLMCharacter.temperature;
+            var timestamp = System.DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            var logDir = Path.Combine(Application.dataPath, "LLMTestResult~");
+            var logFile = $"{logDir}/{modelName}___temp-{temperature}___conveniencestore___{timestamp}";
+            LLMCharacter.save = logFile;
+            print($"saving chat log to: {logFile}");
             InitializeLlm();
         }
         
@@ -106,17 +107,20 @@ namespace UnityLLMAvatar.LLM
 			
                 // Create AI bubble with loading indicator
                 Bubble aiBubble = AddBubble("···", false);
-			
+
                 // Send to LLM
                 var formattedMessage = $"<request>{normalizedMessage}</request>";
+                Debug.Log($"[LLM_REQUEST]{formattedMessage}");
+
                 var llmResponse = await LLMCharacter.Chat(
-                    query: formattedMessage, 
+                    query: formattedMessage,
                     callback: aiBubble.SetThinkingText,
                     completionCallback: AllowInput);
 			
                 // Parse and display response
+                Debug.Log($"[LLM_RESPONSE]{llmResponse}");
                 var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
-                Debug.Log(parsedResponse);
+                // Debug.Log(parsedResponse);
                 aiBubble.SetText(parsedResponse.Answer);
 			
                 // Notify listeners
@@ -210,11 +214,13 @@ namespace UnityLLMAvatar.LLM
 
                 // After warmup, greet the user first
                 var message = "Hello!";
+                Debug.Log($"[LLM_REQUEST]{message}");
                 // AddBubble(message, true);
                 Bubble aiBubble = AddBubble("⋯", false);
 
                 message = $"<request>{message}</request>";
                 string firstResponse = await LLMCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
+                Debug.Log($"[LLM_RESPONSE]{firstResponse}");
 
                 var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
                 Debug.Log(parsedResponse);
