@@ -26,14 +26,15 @@ namespace UnityLLMAvatar
         [Name("temperature")] public float temperature { get; set; }
         [Name("system_prompt")] public string systemPrompt { get; set; }
         [Name("system_prompt_length")] public int systemPromptLength { get; set; }
-        [Name("prompt_eval_time_ms")] public float promptEvalTime_ms { get; set; }
-        [Name("prompt_tokens")] public int promptTokens { get; set; }
-        [Name("eval_time_ms")] public float evalTime_ms { get; set; }
-        [Name("eval_tokens")] public int evalTokens { get; set; }
-        [Name("total_time_ms")] public float totalTime_ms { get; set; }
-        [Name("total_tokens")] public int totalTokens { get; set; }
         [Name("request")] public string request { get; set; }
+        [Name("request_prompt") ] public string requestPrompt { get; set; }
+        [Name("prompt_tokens")] public int promptTokens { get; set; }
+        [Name("prompt_eval_time_ms")] public float promptEvalTime_ms { get; set; }
         [Name("response")] public string response { get; set; }
+        [Name("eval_tokens")] public int evalTokens { get; set; }
+        [Name("eval_time_ms")] public float evalTime_ms { get; set; }
+        [Name("total_tokens")] public int totalTokens { get; set; }
+        [Name("total_time_ms")] public float totalTime_ms { get; set; }
         [Name("tts_time_ms")] public float ttsTime_ms { get; set; }
         [Name("stt_time_ms")] public float sttTime_ms { get; set; }
     }
@@ -50,6 +51,7 @@ namespace UnityLLMAvatar
         private ConversationRecord currentRecord;
         private const string LLM_REQUEST_PREFIX = "[LLM_REQUEST]";
         private const string LLM_RESPONSE_PREFIX = "[LLM_RESPONSE]";
+        private const string LLM_CHARACTER_PREFIX = "[LLM_CHARACTER]";
         private const string TTS_API_PREFIX = "[TTS_API]";
         private const string STT_API_PREFIX = "[STT_API]";
 
@@ -89,6 +91,10 @@ namespace UnityLLMAvatar
             {
                 ParseAndLogTiming(logString);
             }
+            else if(logString.StartsWith(LLM_CHARACTER_PREFIX))
+            {
+                currentRecord.requestPrompt = logString.Substring(LLM_CHARACTER_PREFIX.Length);
+            }
             else if (logString.StartsWith(LLM_REQUEST_PREFIX))
             {
                 currentRecord.request = logString.Substring(LLM_REQUEST_PREFIX.Length);
@@ -98,6 +104,7 @@ namespace UnityLLMAvatar
             else if (logString.StartsWith(LLM_RESPONSE_PREFIX))
             {
                 currentRecord.response = logString.Substring(LLM_RESPONSE_PREFIX.Length);
+                // SaveCurrentRecord();
             }
             else if (logString.StartsWith(TTS_API_PREFIX))
             {

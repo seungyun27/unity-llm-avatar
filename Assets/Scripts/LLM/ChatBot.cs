@@ -46,13 +46,13 @@ namespace UnityLLMAvatar.LLM
         {
             InitializeUI();
             ShowLoadedMessages();
-            var modelName = LLMCharacter.llm.model;
-            var temperature = LLMCharacter.temperature;
-            var timestamp = System.DateTime.Now.ToString("yyyyMMdd-HHmmss");
-            var logDir = Path.Combine(Application.dataPath, "LLMTestResult~");
-            var logFile = $"{logDir}/{modelName}___temp-{temperature}___conveniencestore___{timestamp}";
-            LLMCharacter.save = logFile;
-            print($"saving chat log to: {logFile}");
+            // var modelName = LLMCharacter.llm.model;
+            // var temperature = LLMCharacter.temperature;
+            // var timestamp = System.DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            // var logDir = Path.Combine(Application.dataPath, "LLMTestResult~");
+            // var logFile = $"{logDir}/{modelName}___temp-{temperature}___conveniencestore___{timestamp}";
+            // LLMCharacter.save = logFile;
+            // print($"saving chat log to: {logFile}");
             InitializeLlm();
         }
         

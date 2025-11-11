@@ -494,7 +494,7 @@ namespace LLMUnity
             try
             {
                 AddPlayerMessage(query);
-                string prompt = template.ComputePrompt(chat, playerName, AIName);
+                string prompt = template.ComputePrompt(chat, playerName, AIName); Debug.Log($"[LLM_CHARACTER]{prompt}");
                 result = GenerateRequest(prompt);
                 chat.RemoveAt(chat.Count - 1);
             }
