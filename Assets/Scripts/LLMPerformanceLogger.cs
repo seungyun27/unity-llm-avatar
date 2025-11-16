@@ -6,6 +6,7 @@ using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using LLMUnity;
 using UnityEngine;
+using UnityLLMAvatar.GoogleApi;
 
 namespace UnityLLMAvatar
 {
@@ -23,6 +24,7 @@ namespace UnityLLMAvatar
     public struct ConversationRecord
     {
         [Name("model")] public string model { get; set; }
+        [Name("GPU Layer")] public int gpuLayer { get; set; }
         [Name("temperature")] public float temperature { get; set; }
         [Name("system_prompt")] public string systemPrompt { get; set; }
         [Name("system_prompt_length")] public int systemPromptLength { get; set; }
@@ -35,12 +37,15 @@ namespace UnityLLMAvatar
         [Name("eval_time_ms")] public float evalTime_ms { get; set; }
         [Name("total_tokens")] public int totalTokens { get; set; }
         [Name("total_time_ms")] public float totalTime_ms { get; set; }
-        [Name("tts_time_ms")] public float ttsTime_ms { get; set; }
-        [Name("stt_time_ms")] public float sttTime_ms { get; set; }
+        // [Name("tts_time_ms")] public float ttsTime_ms { get; set; }
+        // [Name("stt_time_ms")] public float sttTime_ms { get; set; }
     }
 
     public class LLMPerformanceLogger : MonoBehaviour
     {
+        public string TTS_script = "Hello!";
+        public VoiceScriptableObject TTS_voice;
+        
         [SerializeField]
         private LLMUnity.LLM _llm;
 
@@ -71,6 +76,7 @@ namespace UnityLLMAvatar
             {
                 model = _llm.model.Replace(".gguf", ""),
                 temperature = _llmCharacter.temperature,
+                gpuLayer = _llm.numGPULayers,
             };
 
             using var writer = new StreamWriter(logFilePath, true);
@@ -104,9 +110,9 @@ namespace UnityLLMAvatar
             else if (logString.StartsWith(LLM_RESPONSE_PREFIX))
             {
                 currentRecord.response = logString.Substring(LLM_RESPONSE_PREFIX.Length);
-                // SaveCurrentRecord();
+                SaveCurrentRecord();
             }
-            else if (logString.StartsWith(TTS_API_PREFIX))
+            /*else if (logString.StartsWith(TTS_API_PREFIX))
             {
                 string timing = logString.Substring(TTS_API_PREFIX.Length);
                 if (float.TryParse(timing.Trim(), out float ttsTime))
@@ -131,7 +137,7 @@ namespace UnityLLMAvatar
                 {
                     currentRecord.sttTime_ms = sttTime;
                 }
-            }
+            }*/
         }
 
         private void SaveCurrentRecord()

@@ -87,6 +87,12 @@ namespace UnityLLMAvatar.LLM
         }
         #endregion
         
+        private string makeRequest(string message)
+        {
+            // return $"- request: {message}";
+            return $"<request>{message}</request>";
+        }
+        
         public async Task SendMessageAsync(string message)
         {
             if (_blockInput || string.IsNullOrWhiteSpace(message))
@@ -109,22 +115,23 @@ namespace UnityLLMAvatar.LLM
                 Bubble aiBubble = AddBubble("···", false);
 
                 // Send to LLM
-                var formattedMessage = $"<request>{normalizedMessage}</request>";
+                var formattedMessage = makeRequest(normalizedMessage);
                 Debug.Log($"[LLM_REQUEST]{formattedMessage}");
 
                 var llmResponse = await LLMCharacter.Chat(
                     query: formattedMessage,
-                    callback: aiBubble.SetThinkingText,
+                    callback: _ => {},
                     completionCallback: AllowInput);
 			
                 // Parse and display response
                 Debug.Log($"[LLM_RESPONSE]{llmResponse}");
-                var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
+                // var parsedResponse = XMLParser.ParseLLMResponse(llmResponse);
                 // Debug.Log(parsedResponse);
-                aiBubble.SetText(parsedResponse.Answer);
+                // aiBubble.SetText(parsedResponse.Answer);
+                aiBubble.SetText(llmResponse);
 			
                 // Notify listeners
-                OnResponseReceived?.Invoke(parsedResponse.Answer);
+                // OnResponseReceived?.Invoke(parsedResponse.Answer);
             }
             catch (Exception e)
             {
@@ -161,6 +168,7 @@ namespace UnityLLMAvatar.LLM
         {
             LLMCharacter.SetPrompt(SystemPrompts.ConvenienceStoreClerk);
             LLMCharacter.grammarString = XMLGrammar.Grammar;
+            // LLMCharacter.grammarString = null;
 
             _ = LLMCharacter.Warmup(WarmUpCallback);
         }
@@ -214,19 +222,21 @@ namespace UnityLLMAvatar.LLM
 
                 // After warmup, greet the user first
                 var message = "Hello!";
+                message = makeRequest(message);
                 Debug.Log($"[LLM_REQUEST]{message}");
                 // AddBubble(message, true);
                 Bubble aiBubble = AddBubble("⋯", false);
 
-                message = $"<request>{message}</request>";
-                string firstResponse = await LLMCharacter.Chat(message, aiBubble.SetThinkingText, AllowInput);
+                // message = $"<request>{message}</request>";
+                string firstResponse = await LLMCharacter.Chat(message, _ => { }, AllowInput);
                 Debug.Log($"[LLM_RESPONSE]{firstResponse}");
 
-                var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
-                Debug.Log(parsedResponse);
-                aiBubble.SetText(parsedResponse.Answer);
+                // var parsedResponse = XMLParser.ParseLLMResponse(firstResponse);
+                // Debug.Log(parsedResponse);
+                // aiBubble.SetText(parsedResponse.Answer);
+                aiBubble.SetText(firstResponse);
 
-                OnResponseReceived?.Invoke(parsedResponse.Answer);
+                // OnResponseReceived?.Invoke(parsedResponse.Answer);
 
                 _inputBubble.SetPlaceHolderText("Message me");
                 AllowInput();

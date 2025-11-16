@@ -509,6 +509,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c50261557d8704481e34665672412f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TTS_script: The release of atomic energy has not created a new problem. It has
+    merely made more urgent the necessity of solving an existing one.
+  TTS_voice: {fileID: 11400000, guid: 37d4420f29a03964bac2b7a20fe4040c, type: 2}
   _llm: {fileID: 211481086}
   _llmCharacter: {fileID: 1406710132}
 --- !u!4 &1718337754
@@ -727,15 +730,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4303499460150745170, guid: 0830baf9e970566458c64813465705b3, type: 3}
       propertyPath: model
-      value: Qwen3-4B-Q4_K_M.gguf
+      value: llama-3.2-3b-instruct-q4_k_m.gguf
       objectReference: {fileID: 0}
     - target: {fileID: 4303499460150745170, guid: 0830baf9e970566458c64813465705b3, type: 3}
       propertyPath: chatTemplate
-      value: qwen3
+      value: llama3 chat
       objectReference: {fileID: 0}
     - target: {fileID: 4303499460150745170, guid: 0830baf9e970566458c64813465705b3, type: 3}
       propertyPath: numGPULayers
-      value: 1
+      value: 99
       objectReference: {fileID: 0}
     - target: {fileID: 4303499460150745170, guid: 0830baf9e970566458c64813465705b3, type: 3}
       propertyPath: advancedOptions
@@ -743,11 +746,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4303499460150745170, guid: 0830baf9e970566458c64813465705b3, type: 3}
       propertyPath: embeddingLength
-      value: 2560
+      value: 3072
       objectReference: {fileID: 0}
     - target: {fileID: 4303499460150745170, guid: 0830baf9e970566458c64813465705b3, type: 3}
       propertyPath: maxContextLength
-      value: 40960
+      value: 131072
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

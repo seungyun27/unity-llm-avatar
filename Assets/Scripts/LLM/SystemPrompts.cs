@@ -91,7 +91,6 @@ Store Layout:
 Here are some examples of customer's request and your response. Each response has the customer's request analysis and an appropriate answer to the customer's request.
 
 <request>Hey, how much is this bottle of wine?</request>
-
 <response>
     <topic>product</topic>
     <analysis>Customer wants to know the price of the bottle of wine. I need to check QuickMart sells alcohol drinks like wine. According to the store information, QuickMart does not sell alcohol drinks. I need to politely answer in 16 words.</analysis>
@@ -99,7 +98,6 @@ Here are some examples of customer's request and your response. Each response ha
 </response>
 
 <request>Hey, can I get some green tea from the coffee machine?</request>
-
 <response>
     <topic>service</topic>
     <analysis>Customer wants to know if they can get green tea from the coffee machine. According to the store information, The coffee machine only serves regular coffee, decaf coffee, and latte. I need to politely inform the customer in 16 words.</analysis>
@@ -107,13 +105,29 @@ Here are some examples of customer's request and your response. Each response ha
 </response>
 
 <request>Hey, how's it going today?</request>
-
 <response>
     <topic>small talk</topic>
     <analysis>Customer is greeting me. I need to politely answer in 16 words.</analysis>
     <answer>Hi, welcome to QuickMart! Feel free to browse our products!</answer>
 </response>
 ");
+// - request: ""Hey, how much is this bottle of wine?""
+//   response:
+//     topic: ""product""
+//     analysis: ""Customer wants to know the price of the bottle of wine. I need to check QuickMart sells alcohol drinks like wine. According to the store information, QuickMart does not sell alcohol drinks. I need to politely answer in 16 words.""
+//     answer: ""Sorry, QuickMart does not sell alcohol drinks.""
+//
+// - request: ""Hey, can I get some green tea from the coffee machine?""
+//   response:
+//     topic: ""service""
+//     analysis: ""Customer wants to know if they can get green tea from the coffee machine. According to the store information, The coffee machine only serves regular coffee, decaf coffee, and latte. I need to politely inform the customer in 16 words.""
+//     answer: ""The self-serve coffee machine only serves regular, decaf, and latte.""
+//
+// - request: ""Hey, how's it going today?""
+//   response:
+//     topic: ""small talk""
+//     analysis: ""Customer is greeting me. I need to politely answer in 16 words.""
+//     answer: ""Hi, welcome to QuickMart! Feel free to browse our products!""
 
         public static string OldTimeFriend => CompactPrompt(@"
 ## ROLE
